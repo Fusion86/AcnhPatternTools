@@ -1,0 +1,8 @@
+UseTab: Never
+IndentWidth: 4
+ColumnLimit: 120
+PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Always
+AlwaysBreakTemplateDeclarations: Yes
+NamespaceIndentation: All
