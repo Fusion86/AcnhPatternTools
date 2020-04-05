@@ -17,7 +17,7 @@ ifeq ($(CXX),g++)
 LIBS		+= -lstdc++fs
 else ifeq ($(CXX),$(filter $(CXX),clang c++))
 else
-$(warning Unknown compiler '${CXX}', this might be a problem.)
+$(warning Unknown compiler '$(CXX)', this might be a problem.)
 endif
 
 .PHONY: all clean

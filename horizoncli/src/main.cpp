@@ -91,8 +91,6 @@ void import() {
 
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 32; x++) {
-                    // auto rgb = image.get_pixel(x_off + x, y_off + y);
-                    // AcnhColor color{rgb.red, rgb.green, rgb.blue}; // HACK: Ugly
                     uint8_t* srcPtr = image + (x_off + x + (y_off + y) * width) * channels;
                     AcnhColor color{
                         srcPtr[0],
