@@ -1,11 +1,12 @@
-TARGET 		:= horizonlib
+TARGET 		:= $(notdir $(CURDIR))
 SOURCES 	:= lib
 INCLUDES 	:= include
 
 TESTS		:= test
 BUILD 		:= build
 OBJDIR		:= obj
-CXXFLAGS	+= -std=c++17 -lmbedcrypto -g
+CXXFLAGS	+= -std=c++17 -g -MD
+LIBS		:= -lmbedcrypto
 
 CPPFILES 	:= $(foreach dir,$(SOURCES),$(shell find $(dir) -type f -iname "*.cpp"  ))
 CPPFILES 	+= $(foreach dir,$(TESTS),$(wildcard $(dir)/*.cpp))
@@ -14,12 +15,12 @@ INCLUDE		:= $(foreach dir,$(INCLUDES),-I$(dir))
 
 OFILES		:= $(addprefix $(OBJDIR)/,$(CPPFILES:.cpp=.o))
 WARNINGS	:= -Wall -Wextra -Wno-unused-private-field
+CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
 
 ifeq ($(CXX),g++)
 # -lstdc++fs is needed because of Ubuntu
-CXXFLAGS	+= $(INCLUDE) $(WARNINGS) -MD -lstdc++fs
+LIBS		+= -lstdc++fs
 else ifeq ($(CXX),$(filter $(CXX),clang c++))
-CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
 else
 $(warning Unknown compiler '${CXX}', this might be a problem.)
 endif
@@ -40,6 +41,6 @@ $(OBJDIR)/%.o: %.cpp
 
 $(BUILD)/test: $(OFILES) $(HPPFILES)
 	@mkdir -p $(BUILD)
-	$(CXX) $(OFILES) -o $@ $(CXXFLAGS)
+	$(CXX) $(OFILES) -o $@ $(CXXFLAGS) $(LIBS)
 
 -include $(OFILES:.o=.d)

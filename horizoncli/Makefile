@@ -1,31 +1,32 @@
-.PHONY: all clean
-
-TARGET 		:= horizoncli
+TARGET 		:= $(notdir $(CURDIR))
 BUILD 		:= build
 SOURCES 	:= source ../horizonlib/lib
 INCLUDES 	:= include ../horizonlib/include
-CXXFLAGS	+= -std=c++17 -lmbedcrypto -g -MD
+CXXFLAGS	+= -std=c++17 -g -MD
+LIBS		:= -lmbedcrypto
 
 CPPFILES 	:= $(foreach dir,$(SOURCES),$(shell find $(dir) -type f -iname *.cpp))
 HPPFILES	:= $(foreach dir,$(INCLUDES),$(wildcard $(dir)/*.hpp))
 INCLUDE		:=	$(foreach dir,$(INCLUDES),-I$(dir))
 
 WARNINGS	:= -Wall -Wextra -Wno-unused-private-field
+CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
 
 ifeq ($(CXX),g++)
 # -lstdc++fs is needed because of Ubuntu
-CXXFLAGS	+= $(INCLUDE) $(WARNINGS) -lstdc++fs
+LIBS		+= -lstdc++fs
 else ifeq ($(CXX),$(filter $(CXX),clang c++))
-CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
 else
 $(warning Unknown compiler '${CXX}', this might be a problem.)
 endif
+
+.PHONY: all clean
 
 all: $(BUILD)/$(TARGET)
 
 $(BUILD)/$(TARGET): $(CPPFILES) $(HPPFILES)
 	mkdir -p $(BUILD)
-	$(CXX) $(CPPFILES) $(INCLUDE) -o $(BUILD)/$(TARGET) $(CXXFLAGS)
+	$(CXX) $(CPPFILES) $(INCLUDE) -o $(BUILD)/$(TARGET) $(CXXFLAGS) $(LIBS)
 
 run: all
 	./$(BUILD)/$(TARGET)
