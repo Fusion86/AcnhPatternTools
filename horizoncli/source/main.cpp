@@ -55,16 +55,16 @@ void import() {
         return;
     }
 
-    int rows = image.height() / 32;
-    int cols = image.width() / 32;
-    int designOffset = 0;
+    size_t rows = image.height() / 32;
+    size_t cols = image.width() / 32;
+    size_t designOffset = 0;
 
     std::vector<AcnhColor> palette;
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
-            int j = row * rows + col;
-            int y_off = row * 32;
-            int x_off = col * 32;
+    for (size_t row = 0; row < rows; row++) {
+        for (size_t col = 0; col < cols; col++) {
+            size_t j = row * rows + col;
+            size_t y_off = row * 32;
+            size_t x_off = col * 32;
 
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 32; x++) {
@@ -79,8 +79,8 @@ void import() {
 
     // Update palette in pattern
     // TODO: Write non-shit code (build AcnhColor[] once and then set for all)
-    for (int j = 0; j < rows * cols; j++) {
-        for (int i = 0; i < 15; i++) {
+    for (size_t j = 0; j < rows * cols; j++) {
+        for (size_t i = 0; i < 15; i++) {
             AcnhColor color{};
             if (palette.size() > i) color = palette[i];
             savedata->main.designPatterns[designOffset + j].palette[i] = color;
@@ -108,14 +108,14 @@ void extract() {
     if (savedata->load(savedataDirectory) != 0) return;
     fmt::print("Loaded savedata: {}\n", savedataDirectory);
 
-    for (int i = 0; i < savedata->main.designPatterns.size(); i++) {
+    for (size_t i = 0; i < savedata->main.designPatterns.size(); i++) {
         const auto& pattern = savedata->main.designPatterns[i];
         bitmap_image image = patternToImage(pattern);
         std::string filename = fmt::format("{} - {}.bmp", i, pattern.name);
         image.save_image(outDirDesignPatterns / filename);
     }
 
-    for (int i = 0; i < savedata->main.proDesignPatterns.size(); i++) {
+    for (size_t i = 0; i < savedata->main.proDesignPatterns.size(); i++) {
         const auto& pattern = savedata->main.proDesignPatterns[i];
         bitmap_image image = patternToImage(pattern);
         std::string filename = fmt::format("{} - {}.bmp", i, pattern.name);
@@ -127,7 +127,7 @@ void extract() {
     std::string filename = fmt::format("Townflag - {}.bmp", pattern.name);
     image.save_image(output / filename);
 
-    for (int i = 0; i < savedata->main.ableSisters.size(); i++) {
+    for (size_t i = 0; i < savedata->main.ableSisters.size(); i++) {
         const auto& pattern = savedata->main.ableSisters[i];
         bitmap_image image = patternToImage(pattern);
         std::string filename = fmt::format("{} - {}.bmp", i, pattern.name);

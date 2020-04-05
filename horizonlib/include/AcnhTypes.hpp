@@ -164,7 +164,7 @@ struct AcnhDesignPattern {
         if (i % 2 == 0) {
             data[idx] = value & 0x0F;
         } else {
-            data[idx] = value << 4 & 0xF0 | data[idx] & 0x0F;
+            data[idx] = (value << 4 & 0xF0) | (data[idx] & 0x0F);
         }
     }
 

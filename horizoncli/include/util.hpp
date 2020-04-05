@@ -25,7 +25,7 @@ bitmap_image patternToImage(const T& pattern) {
 
 int getOrInsertColor(std::vector<AcnhColor>& palette, const AcnhColor color) {
     // Return existing color, if possible
-    for (int i = 0; i < palette.size(); i++) {
+    for (size_t i = 0; i < palette.size(); i++) {
         if (palette[i] == color) return i;
     }
 
