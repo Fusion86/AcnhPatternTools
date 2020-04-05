@@ -45,7 +45,7 @@ TEST_CASE("Print patterns") {
         fmt::print("- {} - {}\n", pattern.name.str(), pattern.creator.string.str());
     }
 
-    std::cout << "\nAbel Sisters patterns:" << std::endl;
+    std::cout << "\nAble Sisters patterns:" << std::endl;
     for (auto& pattern : saveData->main.ableSisters) {
         fmt::print("- {} - {}\n", pattern.name.str(), pattern.creator.string.str());
     }

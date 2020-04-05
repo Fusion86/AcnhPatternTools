@@ -4,6 +4,7 @@
 #include <array>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <string>
 
 struct AcnhHeaderVersion {
@@ -148,11 +149,32 @@ struct AcnhDesignPattern {
         }
     }
 
+    /// Get RGBA array.
+    std::unique_ptr<uint8_t[]> getRgbaImage() const {
+        size_t pixel_count = getResolution() * 2;
+        auto image = std::make_unique<uint8_t[]>(pixel_count * 4); // x4 because RGBA = 4 bytes
+        size_t ptr = 0;
+        for (size_t i = 0; i < pixel_count; i++) {
+            int idx = getPixel(i);
+            if (idx == 0xF) {
+                // Transparent
+                *(uint32_t*)image.get() = 0; // R,G,B,A = 0
+                ptr += 4;
+            } else {
+                // Not transparent
+                image[ptr++] = palette[idx].red;
+                image[ptr++] = palette[idx].green;
+                image[ptr++] = palette[idx].blue;
+                image[ptr++] = 0xFF; // Alpha
+            }
+        }
+        return image;
+    }
+
     const AcnhColor getPixelColor(int i) const {
         return getPixelColor(i / getResolution(), i % getResolution());
     }
 
-    // TODO: Move this to both DesignPattern and ProDesignPattern with each their own implementation.
     const AcnhColor getPixelColor(int x, int y) const {
         int idx = getPixel(x, y);
         if (idx == 15) return AcnhColor(); // Transparent
