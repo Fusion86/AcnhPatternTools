@@ -137,10 +137,11 @@ struct AcnhDesignPattern {
 
     // TODO: Use this as implementation and let the other setPixel call this.
     uint8_t getPixel(int i) const {
-        return getPixel(i / getResolution(), i % getResolution());
+        return getPixel(i % getResolution(), i / getResolution());
     }
 
     // TODO: Move this to both DesignPattern and ProDesignPattern with each their own implementation.
+    // This does NOT work for pro patterns.
     uint8_t getPixel(int x, int y) const {
         if (x % 2 == 0) {
             return data[(x / 2) + y * (getResolution() / 2)] & 0x0F;
@@ -151,36 +152,40 @@ struct AcnhDesignPattern {
 
     /// Get RGBA array.
     std::unique_ptr<uint8_t[]> getRgbaImage() const {
-        size_t pixel_count = getResolution() * 2;
+        // TODO: This does NOT work for pro patterns.
+        size_t pixel_count = getResolution() * getResolution();
         auto image = std::make_unique<uint8_t[]>(pixel_count * 4); // x4 because RGBA = 4 bytes
+
         size_t ptr = 0;
         for (size_t i = 0; i < pixel_count; i++) {
-            int idx = getPixel(i);
-            if (idx == 0xF) {
+            int paletteIdx = getPixel(i);
+            if (paletteIdx == 0xF) {
                 // Transparent
                 *(uint32_t*)image.get() = 0; // R,G,B,A = 0
                 ptr += 4;
             } else {
                 // Not transparent
-                image[ptr++] = palette[idx].red;
-                image[ptr++] = palette[idx].green;
-                image[ptr++] = palette[idx].blue;
+                image[ptr++] = palette[paletteIdx].red;
+                image[ptr++] = palette[paletteIdx].green;
+                image[ptr++] = palette[paletteIdx].blue;
                 image[ptr++] = 0xFF; // Alpha
             }
         }
+
         return image;
     }
 
     const AcnhColor getPixelColor(int i) const {
-        return getPixelColor(i / getResolution(), i % getResolution());
+        return getPixelColor(i % getResolution(), i / getResolution());
     }
 
     const AcnhColor getPixelColor(int x, int y) const {
         int idx = getPixel(x, y);
-        if (idx == 15) return AcnhColor(); // Transparent
+        if (idx >= 0xF) throw std::runtime_error("Palette index out of range!");
         return palette[idx];
     }
 
+    // Probably doesn't work for pro patterns.
     void setPixel(int i, int value) {
         auto idx = i / 2;
         if (i % 2 == 0) {

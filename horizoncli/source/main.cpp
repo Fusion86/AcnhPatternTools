@@ -100,7 +100,7 @@ void import() {
                         srcPtr[2],
                     };
 
-                    int idx = 16; // Transparent by default
+                    int idx = 0xF; // Transparent by default
                     if (!hasAlpha || srcPtr[3] != 0) {
                         // Get color palette index if pixel is NOT transparent
                         idx = getOrInsertColor(palette, color);
@@ -146,28 +146,32 @@ void extract() {
 
     for (size_t i = 0; i < savedata->main.designPatterns.size(); i++) {
         const auto& pattern = savedata->main.designPatterns[i];
-        auto imageData = pattern.getRgbaImage();
-        std::string filename = outDirDesignPatterns / fmt::format("{} - {}.bmp", i, pattern.name);
-        stbi_write_png(filename.c_str(), 32, 32, 4, imageData.get(), 4);
+        const int res = pattern.getResolution();
+        const auto imageData = pattern.getRgbaImage();
+        std::string filename = outDirDesignPatterns / fmt::format("{} - {}.png", i, pattern.name);
+        stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     }
 
     // for (size_t i = 0; i < savedata->main.proDesignPatterns.size(); i++) {
     //     const auto& pattern = savedata->main.proDesignPatterns[i];
-    //     bitmap_image image = patternToImage(pattern);
-    //     std::string filename = fmt::format("{} - {}.bmp", i, pattern.name);
-    //     image.save_image(outDirProDesignPatterns / filename);
+    //     const int res = pattern.getResolution();
+    //     const auto imageData = pattern.getRgbaImage();
+    //     std::string filename = outDirProDesignPatterns / fmt::format("{} - {}.png", i, pattern.name);
+    //     stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     // }
 
-    // const auto& pattern = savedata->main.townFlag;
-    // bitmap_image image = patternToImage(pattern);
-    // std::string filename = fmt::format("Townflag - {}.bmp", pattern.name);
-    // image.save_image(output / filename);
+    const auto& pattern = savedata->main.townFlag;
+    const int res = pattern.getResolution();
+    const auto imageData = pattern.getRgbaImage();
+    std::string filename = output / fmt::format("Townflag - {}.png", pattern.name);
+    stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
 
     // for (size_t i = 0; i < savedata->main.ableSisters.size(); i++) {
     //     const auto& pattern = savedata->main.ableSisters[i];
-    //     bitmap_image image = patternToImage(pattern);
-    //     std::string filename = fmt::format("{} - {}.bmp", i, pattern.name);
-    //     image.save_image(outDirAbleSistersPatterns / filename);
+    //     const int res = pattern.getResolution();
+    //     const auto imageData = pattern.getRgbaImage();
+    //     std::string filename = outDirAbleSistersPatterns / fmt::format("{} - {}.png", i, pattern.name);
+    //     stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     // }
 }
 
