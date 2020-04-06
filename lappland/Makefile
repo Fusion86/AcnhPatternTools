@@ -14,7 +14,7 @@ HPPFILES	:= $(foreach dir,$(INCLUDES),$(wildcard $(dir)/*.hpp))
 INCLUDE		:= $(foreach dir,$(INCLUDES),-I$(dir))
 
 # Shitty workaround
-_CPPFILES	:= $(foreach file,$(CPPFILES),$(realpath $(file) --relative-to=$(OBJDIR)))
+_CPPFILES	:= $(foreach file,$(CPPFILES),$(realpath $(file)))
 OFILES		:= $(addprefix $(OBJDIR)/,$(_CPPFILES:.cpp=.o))
 WARNINGS	:= -Wall -Wextra -Wno-unused-private-field
 CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
