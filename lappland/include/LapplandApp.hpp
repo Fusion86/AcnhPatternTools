@@ -1,20 +1,15 @@
 #pragma once
 
-#include <memory>
-
-#include <HorizonSaveData.hpp>
-
 #include "wx.hpp"
+
+#include "AppData.hpp"
 
 class LapplandApp : public wxApp {
   public:
     virtual bool OnInit();
-
-  private:
-    std::unique_ptr<HorizonSaveData> savedata;
 };
 
-class MyFrame : public wxFrame {
+class MyFrame : public wxFrame, public UsesAppData {
   public:
     MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 

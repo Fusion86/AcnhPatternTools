@@ -2,13 +2,13 @@
 
 #include <filesystem>
 
+#include <fmt/format.h>
+
 namespace fs = std::filesystem;
 
 wxIMPLEMENT_APP(LapplandApp);
 
 bool LapplandApp::OnInit() {
-    savedata = std::make_unique<HorizonSaveData>();
-
     wxFrame* frame = new MyFrame("Hello World", wxPoint(500, 500), wxSize(500, 500));
     frame->Show(true);
     return true;
@@ -39,6 +39,12 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
 
     if (dialog->ShowModal() == wxID_OK) {
         fs::path path(dialog->GetPath().ToStdString());
+        int res = getData()->savedata->load(path);
+        if (res != 0) {
+            SetStatusText("Couldn't load savedata!");
+        } else {
+            SetStatusText(fmt::format("Loaded savedata from {}", path.string()));
+        }
     }
 
     dialog->Destroy();
