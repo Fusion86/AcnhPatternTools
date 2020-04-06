@@ -9,7 +9,3 @@ AppData* AppData::getInstance() {
     if (!instance) instance = new AppData();
     return instance;
 }
-
-AppData* UsesAppData::getData() {
-    return AppData::getInstance();
-}

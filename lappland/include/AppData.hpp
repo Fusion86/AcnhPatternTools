@@ -4,6 +4,8 @@
 
 #include <HorizonSaveData.hpp>
 
+#define AppState AppData::getInstance()
+
 class AppData {
   private:
     // static AppData* instance;
@@ -14,9 +16,4 @@ class AppData {
     std::unique_ptr<HorizonSaveData> savedata;
 
     static AppData* getInstance();
-};
-
-class UsesAppData {
-  public:
-    AppData* getData();
 };
