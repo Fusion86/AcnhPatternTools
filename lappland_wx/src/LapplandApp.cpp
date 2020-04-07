@@ -11,7 +11,8 @@ namespace fs = std::filesystem;
 wxIMPLEMENT_APP(LapplandApp);
 
 bool LapplandApp::OnInit() {
-    wxFrame* frame = new MyFrame("No savedata loaded - Lappland", wxDefaultPosition, wxSize(700, 500));
+    wxFrame* frame =
+        new MyFrame("No savedata loaded - Lappland", wxDefaultPosition, wxSize(700, 500));
     frame->Show(true);
     return true;
 }
@@ -31,22 +32,20 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
-    notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
+    wxPanel* panel = new wxPanel(this, wxID_ANY);
+
+    notebook = new wxNotebook(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
     // notebook->Show(false);
     notebook->AddPage(new GeneralInfoView(notebook), "General");
-    notebook->AddPage(new wxStaticText(notebook, -1, "Test 1"), "Title 1");
-    notebook->AddPage(new wxStaticText(notebook, -1, "Test 2"), "Title 2");
 
     wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
     container->Add(notebook, 1, wxEXPAND);
-    SetSizer(container);
+
+    panel->SetSizerAndFit(container);
 
     SetMenuBar(menuBar);
     CreateStatusBar();
     SetStatusText("Lappland vX.X.X.X");
-
-    // Layout(); // Probably not needed
-    // SetAutoLayout(true);
 }
 
 void MyFrame::OnOpenFile(wxCommandEvent& event) {
@@ -62,6 +61,11 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
             SetTitle(fmt::format("{} - Lappland", path.string()));
             SetStatusText(fmt::format("Loaded savedata from {}", path.string()));
             // notebook->Show(true);
+
+            for (int i = 0; i < notebook->GetPageCount(); i++) {
+                wxCommandEvent event(EVT_DATA_CHANGED);
+                wxPostEvent(notebook->GetPage(i), event);
+            }
         }
     }
 
@@ -78,3 +82,12 @@ void MyFrame::OnAbout(wxCommandEvent& event) {
     wxMessageBox("This is a wxWidgets' Hello world sample", "About Lappland",
                  wxOK | wxICON_INFORMATION);
 }
+
+// clang-format off
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
+    EVT_MENU(wxID_OPEN, MyFrame::OnOpenFile)
+    EVT_MENU(wxID_SAVE, MyFrame::OnSaveFile)
+    EVT_MENU(wxID_EXIT, MyFrame::OnExit)
+    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
+wxEND_EVENT_TABLE();
+// clang-format on

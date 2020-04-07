@@ -27,12 +27,3 @@ class MyFrame : public wxFrame {
 enum {
     // ID_OpenFile = 1,
 };
-
-// clang-format off
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_MENU(wxID_OPEN, MyFrame::OnOpenFile)
-    EVT_MENU(wxID_SAVE, MyFrame::OnSaveFile)
-    EVT_MENU(wxID_EXIT, MyFrame::OnExit)
-    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-wxEND_EVENT_TABLE();
-// clang-format on

@@ -3,6 +3,7 @@
 #include "wx.hpp"
 
 #include "AppData.hpp"
+#include "Events.hpp"
 
 class GeneralInfoView : public wxWindow {
   public:
@@ -12,6 +13,6 @@ class GeneralInfoView : public wxWindow {
     wxTextCtrl* txtCharacter;
     wxTextCtrl* txtIsland;
 
-    void OnUpdate(wxCommandEvent& event);
-    // wxDECLARE_EVENT_TABLE();
+    void OnDataChanged(wxCommandEvent& event);
+    wxDECLARE_EVENT_TABLE();
 };
