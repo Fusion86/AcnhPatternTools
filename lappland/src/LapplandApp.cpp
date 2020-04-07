@@ -45,8 +45,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     CreateStatusBar();
     SetStatusText("Lappland vX.X.X.X");
 
-    Layout(); // Probably not needed
-    SetAutoLayout(true);
+    // Layout(); // Probably not needed
+    // SetAutoLayout(true);
 }
 
 void MyFrame::OnOpenFile(wxCommandEvent& event) {

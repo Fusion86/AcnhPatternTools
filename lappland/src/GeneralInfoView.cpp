@@ -3,7 +3,7 @@
 GeneralInfoView::GeneralInfoView(wxWindow* parent)
     : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(500,500)) {
     wxPanel* panel = new wxPanel(this, wxID_ANY);
-    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
     wxStaticText* lblCharacter = new wxStaticText(panel, wxID_ANY, "Character");
     wxStaticText* lblIsland = new wxStaticText(panel, wxID_ANY, "Island");
@@ -19,8 +19,8 @@ GeneralInfoView::GeneralInfoView(wxWindow* parent)
 
     fgs->AddGrowableCol(1, 1);
 
-    hbox->Add(fgs, 1, wxALL | wxEXPAND, 15);
-    panel->SetSizer(hbox);
+    vbox->Add(fgs, 1, wxALL | wxEXPAND, 15);
+    panel->SetSizer(vbox);
     Centre();
 }
 
