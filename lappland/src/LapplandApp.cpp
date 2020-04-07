@@ -4,6 +4,8 @@
 
 #include <fmt/format.h>
 
+#include "GeneralInfoView.hpp"
+
 namespace fs = std::filesystem;
 
 wxIMPLEMENT_APP(LapplandApp);
@@ -30,7 +32,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     menuBar->Append(menuHelp, "&Help");
 
     notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
-    notebook->Show(false);
+    // notebook->Show(false);
+    notebook->AddPage(new GeneralInfoView(notebook), "General");
     notebook->AddPage(new wxStaticText(notebook, -1, "Test 1"), "Title 1");
     notebook->AddPage(new wxStaticText(notebook, -1, "Test 2"), "Title 2");
 
@@ -42,7 +45,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     CreateStatusBar();
     SetStatusText("Lappland vX.X.X.X");
 
-    // Layout(); // Probably not needed
+    Layout(); // Probably not needed
     SetAutoLayout(true);
 }
 
@@ -58,7 +61,7 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
         } else {
             SetTitle(fmt::format("{} - Lappland", path.string()));
             SetStatusText(fmt::format("Loaded savedata from {}", path.string()));
-            notebook->Show(true);
+            // notebook->Show(true);
         }
     }
 
