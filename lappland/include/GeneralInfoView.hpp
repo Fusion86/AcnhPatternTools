@@ -10,6 +10,7 @@ class GeneralInfoView : public wxWindow {
 
   private:
     wxTextCtrl* txtCharacter;
+    wxTextCtrl* txtIsland;
 
     void OnUpdate(wxCommandEvent& event);
     // wxDECLARE_EVENT_TABLE();
