@@ -25,9 +25,15 @@ struct AcnhHeaderVersion {
         constexpr std::array supportedMinor = {0x78};
         constexpr std::array supportedRev = {0x2, 0x4};
 
-        if (std::find(supportedMajor.begin(), supportedMinor.end(), majorVer) == supportedMajor.end()) return false;
-        if (std::find(supportedMinor.begin(), supportedMinor.end(), minorVer) == supportedMinor.end()) return false;
-        if (std::find(supportedRev.begin(), supportedRev.end(), saveFileRevision) == supportedRev.end()) return false;
+        if (std::find(supportedMajor.begin(), supportedMinor.end(), majorVer) ==
+            supportedMajor.end())
+            return false;
+        if (std::find(supportedMinor.begin(), supportedMinor.end(), minorVer) ==
+            supportedMinor.end())
+            return false;
+        if (std::find(supportedRev.begin(), supportedRev.end(), saveFileRevision) ==
+            supportedRev.end())
+            return false;
         return true;
     }
 };
@@ -98,7 +104,8 @@ struct AcnhColor {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const AcnhColor& obj) {
-        os << "r=" << unsigned(obj.red) << " g=" << unsigned(obj.green) << " b=" << unsigned(obj.blue);
+        os << "r=" << unsigned(obj.red) << " g=" << unsigned(obj.green)
+           << " b=" << unsigned(obj.blue);
         return os;
     }
 };
@@ -140,8 +147,8 @@ struct AcnhDesignPattern {
         return getPixel(i % getResolution(), i / getResolution());
     }
 
-    // TODO: Move this to both DesignPattern and ProDesignPattern with each their own implementation.
-    // This does NOT work for pro patterns.
+    // TODO: Move this to both DesignPattern and ProDesignPattern with each their own
+    // implementation. This does NOT work for pro patterns.
     uint8_t getPixel(int x, int y) const {
         if (x % 2 == 0) {
             return data[(x / 2) + y * (getResolution() / 2)] & 0x0F;
@@ -150,29 +157,55 @@ struct AcnhDesignPattern {
         }
     }
 
-    /// Get RGBA array.
-    std::unique_ptr<uint8_t[]> getRgbaImage() const {
+    /// Get RGB array.
+    std::unique_ptr<uint8_t[]> getRgbData() const {
         // TODO: This does NOT work for pro patterns.
         size_t pixel_count = getResolution() * getResolution();
-        auto image = std::make_unique<uint8_t[]>(pixel_count * 4); // x4 because RGBA = 4 bytes
+        auto data = std::make_unique<uint8_t[]>(pixel_count * 3); // x3 because RGB = 3 bytes
 
         size_t ptr = 0;
         for (size_t i = 0; i < pixel_count; i++) {
             int paletteIdx = getPixel(i);
             if (paletteIdx == 0xF) {
                 // Transparent
-                *(uint32_t*)image.get() = 0; // R,G,B,A = 0
-                ptr += 4;
+                // TODO: Maybe make this bright pink, just like game engines do?
+                data[ptr++] = 0;
+                data[ptr++] = 0;
+                data[ptr++] = 0;
             } else {
                 // Not transparent
-                image[ptr++] = palette[paletteIdx].red;
-                image[ptr++] = palette[paletteIdx].green;
-                image[ptr++] = palette[paletteIdx].blue;
-                image[ptr++] = 0xFF; // Alpha
+                data[ptr++] = palette[paletteIdx].red;
+                data[ptr++] = palette[paletteIdx].green;
+                data[ptr++] = palette[paletteIdx].blue;
             }
         }
 
-        return image;
+        return data;
+    }
+
+    /// Get RGBA array.
+    std::unique_ptr<uint8_t[]> getRgbaData() const {
+        // TODO: This does NOT work for pro patterns.
+        size_t pixel_count = getResolution() * getResolution();
+        auto data = std::make_unique<uint8_t[]>(pixel_count * 4); // x4 because RGBA = 4 bytes
+
+        size_t ptr = 0;
+        for (size_t i = 0; i < pixel_count; i++) {
+            int paletteIdx = getPixel(i);
+            if (paletteIdx == 0xF) {
+                // Transparent
+                *(uint32_t*)data.get() = 0; // R,G,B,A = 0
+                ptr += 4;
+            } else {
+                // Not transparent
+                data[ptr++] = palette[paletteIdx].red;
+                data[ptr++] = palette[paletteIdx].green;
+                data[ptr++] = palette[paletteIdx].blue;
+                data[ptr++] = 0xFF; // Alpha
+            }
+        }
+
+        return data;
     }
 
     const AcnhColor getPixelColor(int i) const {

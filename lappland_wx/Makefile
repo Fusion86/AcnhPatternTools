@@ -23,6 +23,8 @@ ifeq ($(CXX),g++)
 # -lstdc++fs is needed because of Ubuntu
 LIBS		+= -lstdc++fs
 else ifeq ($(CXX),$(filter $(CXX),clang c++))
+# -fno-stack-check is needed because of https://forums.developer.apple.com/thread/121887#382262
+CXXFLAGS	+= -fno-stack-check
 else
 $(warning Unknown compiler '$(CXX)', this might be a problem.)
 endif

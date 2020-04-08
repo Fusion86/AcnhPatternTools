@@ -1,6 +1,7 @@
 #pragma once
 
 #include "wx.hpp"
+#include <wx/generic/statbmpg.h>
 
 #include "AppData.hpp"
 #include "Events.hpp"
@@ -13,6 +14,7 @@ class DesignPatternsView : public wxPanel {
   private:
     wxListBox* lstDesignPatterns;
     wxListBox* lstProDesignPatterns;
+    wxGenericStaticBitmap* bmpPatternCtrl;
 
     void OnDataChanged(wxCommandEvent& event);
     void OnSelectionChanged(wxCommandEvent& event);

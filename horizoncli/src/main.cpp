@@ -145,7 +145,7 @@ void extract() {
     for (size_t i = 0; i < savedata->main.designPatterns.size(); i++) {
         const auto& pattern = savedata->main.designPatterns[i];
         const int res = pattern.getResolution();
-        const auto imageData = pattern.getRgbaImage();
+        const auto imageData = pattern.getRgbaData();
         std::string filename = outDirDesignPatterns / fmt::format("{} - {}.png", i, pattern.name);
         stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     }
@@ -153,21 +153,21 @@ void extract() {
     // for (size_t i = 0; i < savedata->main.proDesignPatterns.size(); i++) {
     //     const auto& pattern = savedata->main.proDesignPatterns[i];
     //     const int res = pattern.getResolution();
-    //     const auto imageData = pattern.getRgbaImage();
+    //     const auto imageData = pattern.getRgbaData();
     //     std::string filename = outDirProDesignPatterns / fmt::format("{} - {}.png", i, pattern.name);
     //     stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     // }
 
     const auto& pattern = savedata->main.townFlag;
     const int res = pattern.getResolution();
-    const auto imageData = pattern.getRgbaImage();
+    const auto imageData = pattern.getRgbaData();
     std::string filename = output / fmt::format("Townflag - {}.png", pattern.name);
     stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
 
     // for (size_t i = 0; i < savedata->main.ableSisters.size(); i++) {
     //     const auto& pattern = savedata->main.ableSisters[i];
     //     const int res = pattern.getResolution();
-    //     const auto imageData = pattern.getRgbaImage();
+    //     const auto imageData = pattern.getRgbaData();
     //     std::string filename = outDirAbleSistersPatterns / fmt::format("{} - {}.png", i, pattern.name);
     //     stbi_write_png(filename.c_str(), res, res, 4, imageData.get(), res * 4);
     // }

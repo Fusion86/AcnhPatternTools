@@ -1,8 +1,6 @@
 #include "DesignPatternsView.hpp"
 
 DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
-    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
-
     wxStaticText* lblDesignPatterns = new wxStaticText(this, wxID_ANY, "Design Patterns");
     wxStaticText* lblProDesignPatterns = new wxStaticText(this, wxID_ANY, "Pro Design Patterns");
 
@@ -10,6 +8,12 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     lstProDesignPatterns =
         new wxListBox(this, ID_lstProDesignPatterns, wxDefaultPosition, wxDefaultSize);
 
+    wxBitmap bmpPattern = wxBitmap();
+    bmpPattern.Create(wxSize(320, 320));
+    bmpPatternCtrl =
+        new wxGenericStaticBitmap(this, wxID_ANY, bmpPattern, wxDefaultPosition, wxSize(150, 150));
+
+    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
     wxFlexGridSizer* fgs = new wxFlexGridSizer(1, wxSize(10, 5));
     fgs->Add(lblDesignPatterns);
     fgs->Add(lstDesignPatterns, 1, wxEXPAND);
@@ -18,7 +22,12 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
 
     fgs->AddGrowableRow(1);
     fgs->AddGrowableRow(3);
+
+    wxBoxSizer* imgCtrlBox = new wxBoxSizer(wxHORIZONTAL);
+    imgCtrlBox->Add(bmpPatternCtrl);
+
     hbox->Add(fgs, 1, wxEXPAND | wxALL, 10);
+    hbox->Add(imgCtrlBox, 0, wxALL, 10);
 
     Bind(EVT_DATA_CHANGED, &DesignPatternsView::OnDataChanged, this);
     Bind(wxEVT_LISTBOX, &DesignPatternsView::OnSelectionChanged, this);
@@ -45,10 +54,22 @@ void DesignPatternsView::OnDataChanged(wxCommandEvent& event) {
 void DesignPatternsView::OnSelectionChanged(wxCommandEvent& event) {
     int idx = event.GetSelection();
     switch (event.GetId()) {
-        case ID_lstDesignPatterns:
-            break;
+        case ID_lstDesignPatterns: {
+            // TODO: Cleanup + create function for this
+            auto patternIdx = lstDesignPatterns->GetSelection();
+            if (patternIdx == wxNOT_FOUND) break;
+            auto pattern = AppState->savedata->main.designPatterns[patternIdx];
+            auto data = pattern.getRgbData();
+            wxImage img = wxImage(32, 32, data.get(), true);
+            img.Rescale(320, 320);
+            wxBitmap bmp = wxBitmap(img);
+            bmpPatternCtrl->SetBitmap(bmp);
+
+            lstProDesignPatterns->DeselectAll();
+        } break;
 
         case ID_lstProDesignPatterns:
+            lstDesignPatterns->DeselectAll();
             break;
 
         default:

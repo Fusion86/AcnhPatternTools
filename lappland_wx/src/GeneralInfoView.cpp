@@ -1,14 +1,13 @@
 #include "GeneralInfoView.hpp"
 
 GeneralInfoView::GeneralInfoView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
-    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
-
     wxStaticText* lblCharacter = new wxStaticText(this, wxID_ANY, "Character");
     wxStaticText* lblIsland = new wxStaticText(this, wxID_ANY, "Island");
 
     txtCharacter = new wxTextCtrl(this, ID_txtCharacter);
     txtIsland = new wxTextCtrl(this, wxID_ANY);
 
+    wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
     wxFlexGridSizer* fgs = new wxFlexGridSizer(2, wxSize(10, 5));
     fgs->Add(lblCharacter, 0, wxALIGN_CENTER_VERTICAL);
     fgs->Add(txtCharacter, 1, wxEXPAND);
