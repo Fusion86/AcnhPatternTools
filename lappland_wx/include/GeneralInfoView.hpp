@@ -16,7 +16,6 @@ class GeneralInfoView : public wxPanel {
 
     void OnDataChanged(wxCommandEvent& event);
     void OnCharacterNameChanged(wxCommandEvent& event);
-    wxDECLARE_EVENT_TABLE();
 
     DECLARE_BASE_ID(GeneralInfoView);
     DECLARE_WIDGET_ID(txtCharacter, 0);

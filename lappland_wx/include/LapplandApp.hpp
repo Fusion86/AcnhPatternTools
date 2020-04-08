@@ -21,9 +21,4 @@ class MyFrame : public wxFrame {
     void OnSaveFile(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
-    wxDECLARE_EVENT_TABLE();
-};
-
-enum {
-    // ID_OpenFile = 1,
 };

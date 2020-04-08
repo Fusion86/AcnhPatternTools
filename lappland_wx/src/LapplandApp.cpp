@@ -4,6 +4,7 @@
 
 #include <fmt/format.h>
 
+#include "DesignPatternsView.hpp"
 #include "GeneralInfoView.hpp"
 
 namespace fs = std::filesystem;
@@ -33,14 +34,18 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     menuBar->Append(menuHelp, "&Help");
 
     notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
-    // notebook->Show(false);
     notebook->AddPage(new GeneralInfoView(notebook), "General");
+    notebook->AddPage(new DesignPatternsView(notebook), "Design Patterns");
 
     wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
-    container->Add(notebook, 0, wxEXPAND | wxALL, 5);
+    container->Add(notebook, 1, wxEXPAND | wxALL, 5);
+
+    Bind(wxEVT_MENU, &MyFrame::OnOpenFile, this, wxID_OPEN);
+    Bind(wxEVT_MENU, &MyFrame::OnSaveFile, this, wxID_SAVE);
+    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
 
     SetSizer(container);
-
     SetMenuBar(menuBar);
     CreateStatusBar();
     SetStatusText("Lappland vX.X.X.X");
@@ -58,8 +63,8 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
         } else {
             SetTitle(fmt::format("{} - Lappland", path.string()));
             SetStatusText(fmt::format("Loaded savedata from {}", path.string()));
-            // notebook->Show(true);
 
+            // Notify all tabs of the change
             for (int i = 0; i < notebook->GetPageCount(); i++) {
                 wxCommandEvent event(EVT_DATA_CHANGED);
                 wxPostEvent(notebook->GetPage(i), event);
@@ -80,12 +85,3 @@ void MyFrame::OnAbout(wxCommandEvent& event) {
     wxMessageBox("This is a wxWidgets' Hello world sample", "About Lappland",
                  wxOK | wxICON_INFORMATION);
 }
-
-// clang-format off
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_MENU(wxID_OPEN, MyFrame::OnOpenFile)
-    EVT_MENU(wxID_SAVE, MyFrame::OnSaveFile)
-    EVT_MENU(wxID_EXIT, MyFrame::OnExit)
-    EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-wxEND_EVENT_TABLE();
-// clang-format on

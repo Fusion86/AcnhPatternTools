@@ -6,3 +6,4 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Always
 AlwaysBreakTemplateDeclarations: Yes
 NamespaceIndentation: All
+IndentCaseLabels: true
