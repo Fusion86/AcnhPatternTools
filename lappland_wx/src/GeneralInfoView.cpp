@@ -1,7 +1,6 @@
 #include "GeneralInfoView.hpp"
 
-GeneralInfoView::GeneralInfoView(wxWindow* parent)
-    : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(500, 500)) {
+GeneralInfoView::GeneralInfoView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
     wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
     wxStaticText* lblCharacter = new wxStaticText(this, wxID_ANY, "Character");
@@ -26,8 +25,13 @@ void GeneralInfoView::OnDataChanged(wxCommandEvent& event) {
     txtIsland->ChangeValue(AppState->savedata->main.island.string.str());
 }
 
+void GeneralInfoView::OnCharacterNameChanged(wxCommandEvent& event) {
+    std::cout << "Yeet" << std::endl;
+}
+
 // clang-format off
 wxBEGIN_EVENT_TABLE(GeneralInfoView, wxWindow)
     EVT_COMMAND(wxID_ANY, EVT_DATA_CHANGED, GeneralInfoView::OnDataChanged)
+    EVT_TEXT(ID_txtCharacter, GeneralInfoView::OnCharacterNameChanged)
 wxEND_EVENT_TABLE();
 // clang-format on
