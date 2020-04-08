@@ -32,16 +32,14 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
-    wxPanel* panel = new wxPanel(this, wxID_ANY);
-
-    notebook = new wxNotebook(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
+    notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
     // notebook->Show(false);
     notebook->AddPage(new GeneralInfoView(notebook), "General");
 
     wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
-    container->Add(notebook, 1, wxEXPAND);
+    container->Add(notebook, 0, wxEXPAND | wxALL, 5);
 
-    panel->SetSizerAndFit(container);
+    SetSizer(container);
 
     SetMenuBar(menuBar);
     CreateStatusBar();

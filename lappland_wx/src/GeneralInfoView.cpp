@@ -2,14 +2,13 @@
 
 GeneralInfoView::GeneralInfoView(wxWindow* parent)
     : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(500, 500)) {
-    wxPanel* panel = new wxPanel(this, wxID_ANY);
     wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
-    wxStaticText* lblCharacter = new wxStaticText(panel, wxID_ANY, "Character");
-    wxStaticText* lblIsland = new wxStaticText(panel, wxID_ANY, "Island");
+    wxStaticText* lblCharacter = new wxStaticText(this, wxID_ANY, "Character");
+    wxStaticText* lblIsland = new wxStaticText(this, wxID_ANY, "Island");
 
-    txtCharacter = new wxTextCtrl(panel, wxID_ANY);
-    txtIsland = new wxTextCtrl(panel, wxID_ANY);
+    txtCharacter = new wxTextCtrl(this, wxID_ANY);
+    txtIsland = new wxTextCtrl(this, wxID_ANY);
 
     wxFlexGridSizer* fgs = new wxFlexGridSizer(2, wxSize(10, 5));
     fgs->Add(lblCharacter, 0, wxALIGN_CENTER_VERTICAL);
@@ -17,11 +16,9 @@ GeneralInfoView::GeneralInfoView(wxWindow* parent)
     fgs->Add(lblIsland, 0, wxALIGN_CENTER_VERTICAL);
     fgs->Add(txtIsland, 1, wxEXPAND);
 
-    // Doesn't work :(
-    // fgs->AddGrowableCol(1, 1);
-
-    hbox->Add(fgs, 1, wxEXPAND | wxALL, 15);
-    panel->SetSizerAndFit(hbox);
+    fgs->AddGrowableCol(1);
+    hbox->Add(fgs, 1, wxEXPAND | wxALL, 10);
+    SetSizer(hbox);
 }
 
 void GeneralInfoView::OnDataChanged(wxCommandEvent& event) {
