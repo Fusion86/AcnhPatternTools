@@ -17,17 +17,17 @@ GeneralInfoView::GeneralInfoView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
     fgs->AddGrowableCol(1);
     hbox->Add(fgs, 1, wxEXPAND | wxALL, 10);
 
-    Bind(EVT_DATA_CHANGED, &GeneralInfoView::OnDataChanged, this);
-    Bind(wxEVT_TEXT, &GeneralInfoView::OnCharacterNameChanged, this, ID_txtCharacter);
+    Bind(EVT_DATA_CHANGED, &GeneralInfoView::onDataChanged, this);
+    Bind(wxEVT_TEXT, &GeneralInfoView::onCharacterNameChanged, this, ID_txtCharacter);
 
     SetSizer(hbox);
 }
 
-void GeneralInfoView::OnDataChanged(wxCommandEvent& event) {
+void GeneralInfoView::onDataChanged(wxCommandEvent& event) {
     txtCharacter->ChangeValue(AppState->savedata->main.character.string.str());
     txtIsland->ChangeValue(AppState->savedata->main.island.string.str());
 }
 
-void GeneralInfoView::OnCharacterNameChanged(wxCommandEvent& event) {
+void GeneralInfoView::onCharacterNameChanged(wxCommandEvent& event) {
     std::cout << "Yeet" << std::endl;
 }

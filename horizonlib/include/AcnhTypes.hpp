@@ -110,6 +110,7 @@ struct AcnhColor {
     }
 };
 
+// Unknown actually
 enum class AcnhPatternType : uint8_t {
 
 };

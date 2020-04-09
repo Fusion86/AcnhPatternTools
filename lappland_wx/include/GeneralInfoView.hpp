@@ -14,8 +14,8 @@ class GeneralInfoView : public wxPanel {
     wxTextCtrl* txtCharacter;
     wxTextCtrl* txtIsland;
 
-    void OnDataChanged(wxCommandEvent& event);
-    void OnCharacterNameChanged(wxCommandEvent& event);
+    void onDataChanged(wxCommandEvent& event);
+    void onCharacterNameChanged(wxCommandEvent& event);
 
     DECLARE_BASE_ID(GeneralInfoView);
     DECLARE_WIDGET_ID(txtCharacter, 0);

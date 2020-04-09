@@ -14,12 +14,19 @@ class DesignPatternsView : public wxPanel {
   private:
     wxListBox* lstDesignPatterns;
     wxListBox* lstProDesignPatterns;
+
+    wxTextCtrl* txtPatternName;
+
     wxGenericStaticBitmap* bmpPatternCtrl;
 
-    void OnDataChanged(wxCommandEvent& event);
-    void OnSelectionChanged(wxCommandEvent& event);
+    DesignPattern* selectedDesignPattern = nullptr;
+    ProDesignPattern* selectedProDesignPattern = nullptr;
+
+    void onDataChanged(wxCommandEvent& event);
+    void onSelectionChanged(wxCommandEvent& event);
 
     DECLARE_BASE_ID(DesignPatternsView);
     DECLARE_WIDGET_ID(lstDesignPatterns, 0);
     DECLARE_WIDGET_ID(lstProDesignPatterns, 1);
+    DECLARE_WIDGET_ID(txtPatternName, 2);
 };

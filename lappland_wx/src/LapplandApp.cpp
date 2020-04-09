@@ -40,10 +40,10 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
     container->Add(notebook, 1, wxEXPAND | wxALL, 5);
 
-    Bind(wxEVT_MENU, &MyFrame::OnOpenFile, this, wxID_OPEN);
-    Bind(wxEVT_MENU, &MyFrame::OnSaveFile, this, wxID_SAVE);
-    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
-    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MyFrame::onOpenFile, this, wxID_OPEN);
+    Bind(wxEVT_MENU, &MyFrame::onSaveFile, this, wxID_SAVE);
+    Bind(wxEVT_MENU, &MyFrame::onExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MyFrame::onAbout, this, wxID_ABOUT);
 
     SetSizer(container);
     SetMenuBar(menuBar);
@@ -51,7 +51,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     SetStatusText("Lappland vX.X.X.X");
 }
 
-void MyFrame::OnOpenFile(wxCommandEvent& event) {
+void MyFrame::onOpenFile(wxCommandEvent& event) {
     wxDirDialog dialog(this, "Select directory containing savedata", "",
                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
@@ -73,7 +73,7 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
     }
 }
 
-void MyFrame::OnSaveFile(wxCommandEvent& event) {
+void MyFrame::onSaveFile(wxCommandEvent& event) {
     if (not AppState->savedata->loaded()) {
         wxMessageDialog dialog(this, "Can't save savedata, because no savedata has been loaded.",
                                "No savedata loaded");
@@ -99,11 +99,11 @@ void MyFrame::OnSaveFile(wxCommandEvent& event) {
     }
 }
 
-void MyFrame::OnExit(wxCommandEvent& event) {
+void MyFrame::onExit(wxCommandEvent& event) {
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent& event) {
+void MyFrame::onAbout(wxCommandEvent& event) {
     wxMessageBox("This is a wxWidgets' Hello world sample", "About Lappland",
                  wxOK | wxICON_INFORMATION);
 }

@@ -17,8 +17,8 @@ class MyFrame : public wxFrame {
   private:
     wxNotebook* notebook;
 
-    void OnOpenFile(wxCommandEvent& event);
-    void OnSaveFile(wxCommandEvent& event);
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
+    void onOpenFile(wxCommandEvent& event);
+    void onSaveFile(wxCommandEvent& event);
+    void onExit(wxCommandEvent& event);
+    void onAbout(wxCommandEvent& event);
 };
