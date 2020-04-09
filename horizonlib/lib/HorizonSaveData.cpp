@@ -50,6 +50,7 @@ int HorizonSaveData::load(const std::string& saveDir) {
 
     aesCryptCtr((uint8_t*)&main, key, iv, sizeof(main), (uint8_t*)&main);
 
+    isLoaded = true;
     return 0;
 }
 
@@ -82,6 +83,10 @@ int HorizonSaveData::save(const std::string& saveDir, bool encrypt) {
     }
 
     return 0;
+}
+
+bool HorizonSaveData::loaded() {
+    return isLoaded;
 }
 
 void HorizonSaveData::updateChecksums() {

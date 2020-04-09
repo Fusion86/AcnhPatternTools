@@ -56,13 +56,13 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
                        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
     if (dialog.ShowModal() == wxID_OK) {
-        fs::path path(dialog.GetPath().ToStdString());
+        std::string path(dialog.GetPath().ToStdString());
         int res = AppState->savedata->load(path);
         if (res != 0) {
             SetStatusText("Couldn't load savedata!");
         } else {
-            SetTitle(fmt::format("{} - Lappland", path.string()));
-            SetStatusText(fmt::format("Loaded savedata from {}", path.string()));
+            SetTitle(fmt::format("{} - Lappland", path));
+            SetStatusText(fmt::format("Loaded savedata from {}", path));
 
             // Notify all tabs of the change
             for (int i = 0; i < notebook->GetPageCount(); i++) {
@@ -74,10 +74,28 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
 }
 
 void MyFrame::OnSaveFile(wxCommandEvent& event) {
-    wxDirDialog dialog(this, "Select directory where to save the savedata", "",
-                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    if (not AppState->savedata->loaded()) {
+        wxMessageDialog dialog(this, "Can't save savedata, because no savedata has been loaded.",
+                               "No savedata loaded");
+        dialog.ShowModal();
+        return;
+    }
 
-    if (dialog.ShowModal() == wxID_OK) {
+    wxDirDialog dirDialog(this, "Select directory where to save the savedata", "",
+                          wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+    if (dirDialog.ShowModal() == wxID_OK) {
+        wxMessageDialog encryptDialog(this, "Do you want to encrypt the savedata?",
+                                      "Encrypt savedata?", wxYES_NO);
+        encryptDialog.SetYesNoLabels("Encrypt", "Don't encrypt");
+
+        // FIX THIS
+        bool encrypt = encryptDialog.ShowModal() == wxYES;
+
+        std::string path(dirDialog.GetPath().ToStdString());
+        AppState->savedata->save(path, encrypt);
+        SetStatusText(
+            fmt::format("Saved {} savedata to {}", encrypt ? "encrypted" : "unencrypted", path));
     }
 }
 
