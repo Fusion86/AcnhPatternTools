@@ -134,9 +134,9 @@ struct AcnhDesignPattern {
     AcnhPatternType type;
     uint16_t zero3;
 
-    const std::string getName() const {
-        return name.str();
-    }
+    // const std::string getName() const {
+    //     return name.str();
+    // }
 
     /// Returns resolution in one dimension.
     constexpr int getResolution() const {

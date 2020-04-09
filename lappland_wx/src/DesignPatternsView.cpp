@@ -63,17 +63,21 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
 
 void DesignPatternsView::onDataChanged(wxCommandEvent& event) {
     wxArrayString patternNames;
-    for (const auto& pattern : AppState->savedata->main.designPatterns) {
-        patternNames.Add(pattern.name.str());
-    }
-    lstDesignPatterns->Set(patternNames);
+    wxArrayString proPatternNames;
 
-    // I guess this could be more efficient by using a fixed size array, but for 50 items this
-    // doesn't really matter.
-    patternNames.Clear();
-    for (const auto& pattern : AppState->savedata->main.proDesignPatterns) {
-        patternNames.Add(pattern.name.str());
+    designPatterns.clear();
+    proDesignPatterns.clear();
+
+    for (int i = 0; i < 50; i++) {
+        designPatterns.push_back(DesignPatternProxy(&AppState->savedata->main.designPatterns[i]));
+        proDesignPatterns.push_back(
+            ProDesignPatternProxy(&AppState->savedata->main.proDesignPatterns[i]));
+
+        patternNames.Add(designPatterns[i].getName());
+        proPatternNames.Add(proDesignPatterns[i].getName());
     }
+
+    lstDesignPatterns->Set(patternNames);
     lstProDesignPatterns->Set(patternNames);
 }
 
@@ -91,8 +95,8 @@ void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
             img.Rescale(320, 320);
             wxBitmap bmp = wxBitmap(img);
 
-            selectedDesignPattern = &pattern;
-            selectedProDesignPattern = nullptr;
+            // selectedDesignPattern = &pattern;
+            // selectedProDesignPattern = nullptr;
 
             bmpPatternCtrl->SetBitmap(bmp);
             lstProDesignPatterns->DeselectAll();
@@ -109,8 +113,8 @@ void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
             img.Rescale(320, 320);
             wxBitmap bmp = wxBitmap(img);
 
-            selectedDesignPattern = nullptr;
-            selectedProDesignPattern = &pattern;
+            // selectedDesignPattern = nullptr;
+            // selectedProDesignPattern = &pattern;
 
             bmpPatternCtrl->SetBitmap(bmp);
             lstDesignPatterns->DeselectAll();
