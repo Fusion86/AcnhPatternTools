@@ -1,6 +1,6 @@
 TARGET 		:= $(notdir $(CURDIR))
 BUILD 		:= build
-SOURCES 	:= source ../horizonlib/lib
+SOURCES 	:= src ../horizonlib/lib
 INCLUDES 	:= include ../horizonlib/include
 CXXFLAGS	+= -std=c++17 -g -MD
 LIBS		:= -lmbedcrypto

@@ -55,22 +55,34 @@ void DesignPatternsView::OnSelectionChanged(wxCommandEvent& event) {
     int idx = event.GetSelection();
     switch (event.GetId()) {
         case ID_lstDesignPatterns: {
-            // TODO: Cleanup + create function for this
             auto patternIdx = lstDesignPatterns->GetSelection();
             if (patternIdx == wxNOT_FOUND) break;
+
             auto pattern = AppState->savedata->main.designPatterns[patternIdx];
-            auto data = pattern.getRgbData();
-            wxImage img = wxImage(32, 32, data.get(), true);
+            auto rgb = pattern.getRgbData();
+            auto alpha = pattern.getAlphaData();
+            wxImage img = wxImage(32, 32, rgb.get(), alpha.get(), true);
             img.Rescale(320, 320);
             wxBitmap bmp = wxBitmap(img);
-            bmpPatternCtrl->SetBitmap(bmp);
 
+            bmpPatternCtrl->SetBitmap(bmp);
             lstProDesignPatterns->DeselectAll();
         } break;
 
-        case ID_lstProDesignPatterns:
+        case ID_lstProDesignPatterns: {
+            auto patternIdx = lstProDesignPatterns->GetSelection();
+            if (patternIdx == wxNOT_FOUND) break;
+
+            auto pattern = AppState->savedata->main.proDesignPatterns[patternIdx];
+            auto rgb = pattern.getRgbData();
+            auto alpha = pattern.getAlphaData();
+            wxImage img = wxImage(64, 64, rgb.get(), alpha.get(), true);
+            img.Rescale(320, 320);
+            wxBitmap bmp = wxBitmap(img);
+
+            bmpPatternCtrl->SetBitmap(bmp);
             lstDesignPatterns->DeselectAll();
-            break;
+        } break;
 
         default:
             // throw error, this shouldn't happen!

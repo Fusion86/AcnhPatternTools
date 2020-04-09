@@ -22,7 +22,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
     wxMenu* menuFile = new wxMenu();
     menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open savedata");
-    menuFile->Append(wxID_SAVE, "&Save");
+    menuFile->Append(wxID_SAVE, "&Save\tCtrl-S", "Save savedata");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
@@ -52,11 +52,11 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
 }
 
 void MyFrame::OnOpenFile(wxCommandEvent& event) {
-    wxDirDialog* dialog = new wxDirDialog(this, "Select directory containing savedata", "",
-                                          wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    wxDirDialog dialog(this, "Select directory containing savedata", "",
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
-    if (dialog->ShowModal() == wxID_OK) {
-        fs::path path(dialog->GetPath().ToStdString());
+    if (dialog.ShowModal() == wxID_OK) {
+        fs::path path(dialog.GetPath().ToStdString());
         int res = AppState->savedata->load(path);
         if (res != 0) {
             SetStatusText("Couldn't load savedata!");
@@ -71,11 +71,15 @@ void MyFrame::OnOpenFile(wxCommandEvent& event) {
             }
         }
     }
-
-    dialog->Destroy();
 }
 
-void MyFrame::OnSaveFile(wxCommandEvent& event) {}
+void MyFrame::OnSaveFile(wxCommandEvent& event) {
+    wxDirDialog dialog(this, "Select directory where to save the savedata", "",
+                       wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+    if (dialog.ShowModal() == wxID_OK) {
+    }
+}
 
 void MyFrame::OnExit(wxCommandEvent& event) {
     Close(true);

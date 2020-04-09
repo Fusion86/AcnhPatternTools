@@ -208,6 +208,18 @@ struct AcnhDesignPattern {
         return data;
     }
 
+    /// Get alpha array.
+    std::unique_ptr<uint8_t[]> getAlphaData() const {
+        size_t pixel_count = getResolution() * getResolution();
+        auto data = std::make_unique<uint8_t[]>(pixel_count);
+
+        for (size_t i = 0; i < pixel_count; i++) {
+            data[i] = getPixel(i) == 0xF ? 0 : 0xFF;
+        }
+
+        return data;
+    }
+
     const AcnhColor getPixelColor(int i) const {
         return getPixelColor(i % getResolution(), i / getResolution());
     }
