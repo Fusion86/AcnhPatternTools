@@ -25,36 +25,37 @@ class IDesignPatternProxy {
 template <class T>
 class DesignPatternProxyImpl : public IDesignPatternProxy {
   private:
-    T* src;
+    T& src;
+    int idx;
     wxListBox* lstBox;
 
   public:
-    DesignPatternProxyImpl(size_t idx, wxListBox* lstBox) : lstBox(lstBox) {}
+    DesignPatternProxyImpl(T& src, int idx, wxListBox* lstBox)
+        : src(src), idx(idx), lstBox(lstBox) {}
 
     bool isProPattern() {
         return typeid(T) == typeid(ProDesignPattern);
     }
 
     int getResolution() const {
-        return src->getResolution();
+        return src.getResolution();
     }
 
     std::string getName() const {
-        return src->name.str();
+        return src.name.str();
     }
 
     void setName(const std::string& str) {
-        src->name = str;
-
-        // Update item in listbox
+        src.name = str; // Update source object
+        lstBox->SetString(idx, src.name.str()); // Update item in listbox
     }
 
     std::unique_ptr<uint8_t[]> getRgbData() const {
-        return src->getRgbData();
+        return src.getRgbData();
     }
 
     std::unique_ptr<uint8_t[]> getAlphaData() const {
-        return src->getAlphaData();
+        return src.getAlphaData();
     }
 };
 

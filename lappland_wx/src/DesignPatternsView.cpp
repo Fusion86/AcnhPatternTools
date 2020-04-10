@@ -73,9 +73,9 @@ void DesignPatternsView::onDataChanged(wxCommandEvent& event) {
 
     for (int i = 0; i < 50; i++) {
         designPatterns.push_back(
-            DesignPatternProxy(i, lstDesignPatterns));
-        proDesignPatterns.push_back(
-            ProDesignPatternProxy(i, lstProDesignPatterns));
+            DesignPatternProxy(AppState->savedata->main.designPatterns[i], i, lstDesignPatterns));
+        proDesignPatterns.push_back(ProDesignPatternProxy(
+            AppState->savedata->main.proDesignPatterns[i], i, lstProDesignPatterns));
 
         patternNames.Add(designPatterns[i].getName());
         proPatternNames.Add(proDesignPatterns[i].getName());
