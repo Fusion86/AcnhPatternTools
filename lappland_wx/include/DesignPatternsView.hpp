@@ -4,6 +4,7 @@
 #include <wx/generic/statbmpg.h>
 
 #include <AcnhTypes.hpp>
+#include <fmt/format.h>
 
 #include "AppData.hpp"
 #include "Events.hpp"
@@ -18,6 +19,10 @@ class IDesignPatternProxy {
 
     virtual std::string getName() const = 0;
     virtual void setName(const std::string& str) = 0;
+    virtual std::string getCreatorName() const = 0;
+    virtual std::string getCreatorId() const = 0;
+    virtual std::string getIslandName() const = 0;
+    virtual std::string getIslandId() const = 0;
     virtual std::unique_ptr<uint8_t[]> getRgbData() const = 0;
     virtual std::unique_ptr<uint8_t[]> getAlphaData() const = 0;
 };
@@ -50,6 +55,22 @@ class DesignPatternProxyImpl : public IDesignPatternProxy {
         lstBox->SetString(idx, src.name.str()); // Update item in listbox
     }
 
+    std::string getCreatorName() const {
+        return src.creator.string.str();
+    }
+
+    std::string getCreatorId() const {
+        return fmt::format("{:04X}", src.creator.id);
+    }
+
+    std::string getIslandName() const {
+        return src.island.string.str();
+    }
+
+    std::string getIslandId() const {
+        return fmt::format("{:04X}", src.island.id);
+    }
+
     std::unique_ptr<uint8_t[]> getRgbData() const {
         return src.getRgbData();
     }
@@ -71,6 +92,10 @@ class DesignPatternsView : public wxPanel {
     wxListBox* lstProDesignPatterns;
 
     wxTextCtrl* txtPatternName;
+    wxTextCtrl* txtPatternCreator;
+    wxTextCtrl* txtPatternCreatorId;
+    wxTextCtrl* txtPatternIsland;
+    wxTextCtrl* txtPatternIslandId;
 
     wxGenericStaticBitmap* bmpPatternCtrl;
 
@@ -89,4 +114,8 @@ class DesignPatternsView : public wxPanel {
     DECLARE_WIDGET_ID(lstDesignPatterns, 0);
     DECLARE_WIDGET_ID(lstProDesignPatterns, 1);
     DECLARE_WIDGET_ID(txtPatternName, 2);
+    DECLARE_WIDGET_ID(txtPatternCreator, 3);
+    DECLARE_WIDGET_ID(txtPatternCreatorId, 4);
+    DECLARE_WIDGET_ID(txtPatternIsland, 4);
+    DECLARE_WIDGET_ID(txtPatternIslandId, 4);
 };

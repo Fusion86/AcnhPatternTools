@@ -28,12 +28,28 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     //
 
     wxStaticText* lblName = new wxStaticText(this, wxID_ANY, "Name");
+    wxStaticText* lblCreator = new wxStaticText(this, wxID_ANY, "Creator");
+    wxStaticText* lblCreatorId = new wxStaticText(this, wxID_ANY, "Creator ID");
+    wxStaticText* lblIsland = new wxStaticText(this, wxID_ANY, "Island");
+    wxStaticText* lblIslandId = new wxStaticText(this, wxID_ANY, "Island ID");
 
     txtPatternName = new wxTextCtrl(this, ID_txtPatternName);
+    txtPatternCreator = new wxTextCtrl(this, ID_txtPatternCreator);
+    txtPatternCreatorId = new wxTextCtrl(this, ID_txtPatternCreatorId);
+    txtPatternIsland = new wxTextCtrl(this, ID_txtPatternIsland);
+    txtPatternIslandId = new wxTextCtrl(this, ID_txtPatternIslandId);
 
     wxFlexGridSizer* col1 = new wxFlexGridSizer(2, wxSize(10, 5));
     col1->Add(lblName, 0, wxALIGN_CENTER_VERTICAL);
     col1->Add(txtPatternName, 1, wxEXPAND);
+    col1->Add(lblCreator, 0, wxALIGN_CENTER_VERTICAL);
+    col1->Add(txtPatternCreator, 1, wxEXPAND);
+    col1->Add(lblCreatorId, 0, wxALIGN_CENTER_VERTICAL);
+    col1->Add(txtPatternCreatorId, 1, wxEXPAND);
+    col1->Add(lblIsland, 0, wxALIGN_CENTER_VERTICAL);
+    col1->Add(txtPatternIsland, 1, wxEXPAND);
+    col1->Add(lblIslandId, 0, wxALIGN_CENTER_VERTICAL);
+    col1->Add(txtPatternIslandId, 1, wxEXPAND);
 
     col1->AddGrowableCol(1);
 
@@ -101,7 +117,7 @@ void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
         } break;
 
         default:
-            // throw error, this shouldn't happen!
+            // log warning, this shouldn't happen!
             break;
     }
 }
@@ -124,6 +140,10 @@ void DesignPatternsView::setSelectedPattern(IDesignPatternProxy* pattern) {
     bmpPatternCtrl->SetBitmap(bmp);
 
     txtPatternName->ChangeValue(pattern->getName());
+    txtPatternCreator->ChangeValue(pattern->getCreatorName());
+    txtPatternCreatorId->ChangeValue(pattern->getCreatorId());
+    txtPatternIsland->ChangeValue(pattern->getIslandName());
+    txtPatternIslandId->ChangeValue(pattern->getIslandId());
 
     if (pattern->isProPattern()) {
         lstDesignPatterns->DeselectAll();
