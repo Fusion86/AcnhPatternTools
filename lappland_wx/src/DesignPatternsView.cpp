@@ -27,11 +27,28 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     // Column 1 - Info panel with name, creator, etc
     //
 
+    wxButton* paletteButtons[16];
+    wxBoxSizer* vboxPalette = new wxBoxSizer(wxHORIZONTAL);
+
+    // temp
+    wxImage img(40, 40);
+    img.SetRGB(wxRect(0, 0, 40, 40), 0xFF, 0, 0);
+    wxBitmap bmp(img);
+
+    for (int i = 0; i < 16; i++) {
+        // TODO: This works, but there is a large (platform dependant) padding around the color. We
+        // probably want to create our own control here.
+        paletteButtons[i] = new wxButton(this, wxID_ANY, "", wxDefaultPosition, wxSize(40, 40));
+        paletteButtons[i]->SetBitmapLabel(bmp);
+        vboxPalette->Add(paletteButtons[i]);
+    }
+
     wxStaticText* lblName = new wxStaticText(this, wxID_ANY, "Name");
     wxStaticText* lblCreator = new wxStaticText(this, wxID_ANY, "Creator");
     wxStaticText* lblCreatorId = new wxStaticText(this, wxID_ANY, "Creator ID");
     wxStaticText* lblIsland = new wxStaticText(this, wxID_ANY, "Island");
     wxStaticText* lblIslandId = new wxStaticText(this, wxID_ANY, "Island ID");
+    wxStaticText* lblPalette = new wxStaticText(this, wxID_ANY, "Palette");
 
     txtPatternName = new wxTextCtrl(this, ID_txtPatternName);
     txtPatternCreator = new wxTextCtrl(this, ID_txtPatternCreator);
@@ -50,6 +67,8 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     col1->Add(txtPatternIsland, 1, wxEXPAND);
     col1->Add(lblIslandId, 0, wxALIGN_CENTER_VERTICAL);
     col1->Add(txtPatternIslandId, 1, wxEXPAND);
+    col1->Add(lblPalette, 0, wxALIGN_CENTER_VERTICAL);
+    col1->Add(vboxPalette, 1, wxEXPAND);
 
     col1->AddGrowableCol(1);
 
