@@ -1,5 +1,7 @@
 #include "DesignPatternsView.hpp"
 
+IDesignPatternProxy::~IDesignPatternProxy() {}
+
 DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
     //
     // Column 0 - Listboxes
@@ -57,6 +59,7 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
 
     Bind(EVT_DATA_CHANGED, &DesignPatternsView::onDataChanged, this);
     Bind(wxEVT_LISTBOX, &DesignPatternsView::onSelectionChanged, this);
+    Bind(wxEVT_TEXT, &DesignPatternsView::onPatternNameChanged, this, ID_txtPatternName);
 
     SetSizer(hbox);
 }
@@ -69,9 +72,10 @@ void DesignPatternsView::onDataChanged(wxCommandEvent& event) {
     proDesignPatterns.clear();
 
     for (int i = 0; i < 50; i++) {
-        designPatterns.push_back(DesignPatternProxy(&AppState->savedata->main.designPatterns[i]));
+        designPatterns.push_back(
+            DesignPatternProxy(i, lstDesignPatterns));
         proDesignPatterns.push_back(
-            ProDesignPatternProxy(&AppState->savedata->main.proDesignPatterns[i]));
+            ProDesignPatternProxy(i, lstProDesignPatterns));
 
         patternNames.Add(designPatterns[i].getName());
         proPatternNames.Add(proDesignPatterns[i].getName());
@@ -85,43 +89,45 @@ void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
     int idx = event.GetSelection();
     switch (event.GetId()) {
         case ID_lstDesignPatterns: {
-            auto patternIdx = lstDesignPatterns->GetSelection();
-            if (patternIdx == wxNOT_FOUND) break;
-
-            auto pattern = AppState->savedata->main.designPatterns[patternIdx];
-            auto rgb = pattern.getRgbData();
-            auto alpha = pattern.getAlphaData();
-            wxImage img = wxImage(32, 32, rgb.get(), alpha.get(), true);
-            img.Rescale(320, 320);
-            wxBitmap bmp = wxBitmap(img);
-
-            // selectedDesignPattern = &pattern;
-            // selectedProDesignPattern = nullptr;
-
-            bmpPatternCtrl->SetBitmap(bmp);
-            lstProDesignPatterns->DeselectAll();
+            auto idx = lstDesignPatterns->GetSelection();
+            if (idx == wxNOT_FOUND) break;
+            setSelectedPattern(&designPatterns[idx]);
         } break;
 
         case ID_lstProDesignPatterns: {
             auto patternIdx = lstProDesignPatterns->GetSelection();
             if (patternIdx == wxNOT_FOUND) break;
-
-            auto pattern = AppState->savedata->main.proDesignPatterns[patternIdx];
-            auto rgb = pattern.getRgbData();
-            auto alpha = pattern.getAlphaData();
-            wxImage img = wxImage(64, 64, rgb.get(), alpha.get(), true);
-            img.Rescale(320, 320);
-            wxBitmap bmp = wxBitmap(img);
-
-            // selectedDesignPattern = nullptr;
-            // selectedProDesignPattern = &pattern;
-
-            bmpPatternCtrl->SetBitmap(bmp);
-            lstDesignPatterns->DeselectAll();
+            setSelectedPattern(&proDesignPatterns[idx]);
         } break;
 
         default:
             // throw error, this shouldn't happen!
             break;
+    }
+}
+
+void DesignPatternsView::onPatternNameChanged(wxCommandEvent& event) {
+    if (selectedDesignPattern != nullptr) {
+        selectedDesignPattern->setName(txtPatternName->GetValue().ToStdString());
+    }
+}
+
+void DesignPatternsView::setSelectedPattern(IDesignPatternProxy* pattern) {
+    selectedDesignPattern = pattern;
+    const auto rgb = pattern->getRgbData();
+    const auto alpha = pattern->getAlphaData();
+    const auto res = pattern->getResolution();
+
+    wxImage img = wxImage(res, res, rgb.get(), alpha.get(), true);
+    img.Rescale(320, 320);
+    wxBitmap bmp = wxBitmap(img);
+    bmpPatternCtrl->SetBitmap(bmp);
+
+    txtPatternName->ChangeValue(pattern->getName());
+
+    if (pattern->isProPattern()) {
+        lstDesignPatterns->DeselectAll();
+    } else {
+        lstProDesignPatterns->DeselectAll();
     }
 }

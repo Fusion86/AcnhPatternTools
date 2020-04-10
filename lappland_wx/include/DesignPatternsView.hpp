@@ -11,23 +11,51 @@
 
 class IDesignPatternProxy {
   public:
+    virtual ~IDesignPatternProxy();
+
+    virtual bool isProPattern() = 0;
+    virtual int getResolution() const = 0;
+
     virtual std::string getName() const = 0;
     virtual void setName(const std::string& str) = 0;
+    virtual std::unique_ptr<uint8_t[]> getRgbData() const = 0;
+    virtual std::unique_ptr<uint8_t[]> getAlphaData() const = 0;
 };
 
 template <class T>
 class DesignPatternProxyImpl : public IDesignPatternProxy {
   private:
     T* src;
+    wxListBox* lstBox;
 
   public:
-    DesignPatternProxyImpl(T* src) : src(src) {}
+    DesignPatternProxyImpl(size_t idx, wxListBox* lstBox) : lstBox(lstBox) {}
+
+    bool isProPattern() {
+        return typeid(T) == typeid(ProDesignPattern);
+    }
+
+    int getResolution() const {
+        return src->getResolution();
+    }
 
     std::string getName() const {
         return src->name.str();
     }
 
-    void setName(const std::string& str) {}
+    void setName(const std::string& str) {
+        src->name = str;
+
+        // Update item in listbox
+    }
+
+    std::unique_ptr<uint8_t[]> getRgbData() const {
+        return src->getRgbData();
+    }
+
+    std::unique_ptr<uint8_t[]> getAlphaData() const {
+        return src->getAlphaData();
+    }
 };
 
 typedef DesignPatternProxyImpl<DesignPattern> DesignPatternProxy;
@@ -52,6 +80,9 @@ class DesignPatternsView : public wxPanel {
 
     void onDataChanged(wxCommandEvent& event);
     void onSelectionChanged(wxCommandEvent& event);
+    void onPatternNameChanged(wxCommandEvent& event);
+
+    void setSelectedPattern(IDesignPatternProxy* pattern);
 
     DECLARE_BASE_ID(DesignPatternsView);
     DECLARE_WIDGET_ID(lstDesignPatterns, 0);
