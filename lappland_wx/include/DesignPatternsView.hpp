@@ -16,6 +16,7 @@ class IDesignPatternProxy {
 
     virtual bool isProPattern() = 0;
     virtual int getResolution() const = 0;
+    virtual int getIndex() const = 0;
 
     virtual std::string getName() const = 0;
     virtual void setName(const std::string& str) = 0;
@@ -44,6 +45,10 @@ class DesignPatternProxyImpl : public IDesignPatternProxy {
 
     int getResolution() const {
         return src.getResolution();
+    }
+
+    int getIndex() const {
+        return idx;
     }
 
     std::string getName() const {
@@ -107,6 +112,7 @@ class DesignPatternsView : public wxPanel {
     void onDataChanged(wxCommandEvent& event);
     void onSelectionChanged(wxCommandEvent& event);
     void onPatternNameChanged(wxCommandEvent& event);
+    void onImportImage(wxCommandEvent& event);
 
     void setSelectedPattern(IDesignPatternProxy* pattern);
 
@@ -116,6 +122,7 @@ class DesignPatternsView : public wxPanel {
     DECLARE_WIDGET_ID(txtPatternName, 2);
     DECLARE_WIDGET_ID(txtPatternCreator, 3);
     DECLARE_WIDGET_ID(txtPatternCreatorId, 4);
-    DECLARE_WIDGET_ID(txtPatternIsland, 4);
-    DECLARE_WIDGET_ID(txtPatternIslandId, 4);
+    DECLARE_WIDGET_ID(txtPatternIsland, 5);
+    DECLARE_WIDGET_ID(txtPatternIslandId, 6);
+    DECLARE_WIDGET_ID(btnImportPattern, 7);
 };

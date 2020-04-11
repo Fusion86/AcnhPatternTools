@@ -80,8 +80,12 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     bmpPattern.Create(wxSize(320, 320));
     bmpPatternCtrl = new wxGenericStaticBitmap(this, wxID_ANY, bmpPattern);
 
-    wxBoxSizer* col2 = new wxBoxSizer(wxHORIZONTAL);
+    wxButton* btnImportPattern = new wxButton(this, ID_btnImportPattern, "Import image");
+
+    wxBoxSizer* col2 = new wxBoxSizer(wxVERTICAL);
     col2->Add(bmpPatternCtrl);
+    col2->AddSpacer(5);
+    col2->Add(btnImportPattern, 0, wxEXPAND);
 
     //
     // Connect all the things
@@ -95,6 +99,7 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     Bind(EVT_DATA_CHANGED, &DesignPatternsView::onDataChanged, this);
     Bind(wxEVT_LISTBOX, &DesignPatternsView::onSelectionChanged, this);
     Bind(wxEVT_TEXT, &DesignPatternsView::onPatternNameChanged, this, ID_txtPatternName);
+    Bind(wxEVT_BUTTON, &DesignPatternsView::onImportImage, this, ID_btnImportPattern);
 
     SetSizer(hbox);
 }
@@ -144,6 +149,104 @@ void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
 void DesignPatternsView::onPatternNameChanged(wxCommandEvent& event) {
     if (selectedDesignPattern != nullptr) {
         selectedDesignPattern->setName(txtPatternName->GetValue().ToStdString());
+    }
+}
+
+void DesignPatternsView::onImportImage(wxCommandEvent& event) {
+    if (selectedDesignPattern != nullptr) {
+        if (selectedDesignPattern->isProPattern()) {
+            wxMessageBox("The image import functionality currently only works for normal patterns.",
+                         "Not supported");
+            return;
+        }
+
+        wxFileDialog dialog(this, "Select source image");
+        if (dialog.ShowModal() == wxID_OK) {
+            wxImage img;
+            if (not img.LoadFile(dialog.GetPath())) {
+                wxMessageBox("Couldn't load image!", "Couldn't load image");
+                return;
+            }
+
+            if (img.GetWidth() % 32 != 0 || img.GetHeight() % 32 != 0) {
+                wxMessageBox("The image needs to be 32x32, or a multiple of 32x32 (aspect ratio "
+                             "doesn't matter).",
+                             "Invalid image size");
+                return;
+            }
+
+            // TODO: Place this in a function somewhere
+            auto getOrInsertColor = [](std::vector<AcnhColor>& palette,
+                                       const AcnhColor color) -> int {
+                // Return existing color, if possible
+                for (size_t i = 0; i < palette.size(); i++) {
+                    if (palette[i] == color) return i;
+                }
+
+                // Insert new color in palette, if there's space
+                if (palette.size() < 15) {
+                    palette.push_back(color);
+                    return palette.size() - 1;
+                }
+
+                // No space available for more colors :(
+                return -1;
+            };
+
+            size_t rows = img.GetHeight() / 32;
+            size_t cols = img.GetWidth() / 32;
+            size_t designOffset = selectedDesignPattern->getIndex();
+            std::vector<AcnhColor> palette;
+
+            wxMessageDialog dialog(
+                this,
+                fmt::format("This image will overwrite {} patterns, starting at {} (zero-indexed).",
+                            rows * cols, designOffset),
+                "Continue?", wxOK | wxCANCEL | wxCENTER);
+            if (dialog.ShowModal() != wxID_OK) {
+                return;
+            }
+
+            for (size_t row = 0; row < rows; row++) {
+                for (size_t col = 0; col < cols; col++) {
+                    size_t part =
+                        row * rows + col; // 1 part = 32x32, so 128x128 images have 16 parts
+                    size_t y_off = row * 32;
+                    size_t x_off = col * 32;
+
+                    for (int y = 0; y < 32; y++) {
+                        for (int x = 0; x < 32; x++) {
+                            AcnhColor color{img.GetRed(x_off + x, y_off + y),
+                                            img.GetBlue(x_off + x, y_off + y),
+                                            img.GetGreen(x_off + x, y_off + y)};
+
+                            int idx = 0xF; // Transparent by default
+                            if (not img.HasAlpha() || img.GetAlpha(x_off + x, y_off + y) != 0) {
+                                // Get color palette index if pixel is NOT transparent
+                                idx = getOrInsertColor(palette, color);
+                            }
+                            AppState->savedata->main.designPatterns[designOffset + part].setPixel(
+                                x, y, idx);
+                        }
+                    }
+                }
+            }
+
+            // Update palette in pattern
+            // TODO: Write non-shit code (build AcnhColor[] once and then set for all)
+            for (size_t j = 0; j < rows * cols; j++) {
+                for (size_t i = 0; i < 15; i++) {
+                    AcnhColor color{};
+                    if (palette.size() > i) color = palette[i];
+                    AppState->savedata->main.designPatterns[designOffset + j].palette[i] = color;
+                }
+            }
+
+            // TODO: Update pattern name
+        }
+    } else {
+        wxMessageBox("Please select a design pattern to be used as the destination.",
+                     "No design pattern selected.");
     }
 }
 
