@@ -23,7 +23,7 @@ struct AcnhHeaderVersion {
     bool isSupported() const {
         constexpr std::array supportedMajor = {0x6D};
         constexpr std::array supportedMinor = {0x78};
-        constexpr std::array supportedRev = {0x2, 0x4};
+        constexpr std::array supportedRev = {0x2, 0x4, 0x5};
 
         if (std::find(supportedMajor.begin(), supportedMinor.end(), majorVer) ==
             supportedMajor.end())
