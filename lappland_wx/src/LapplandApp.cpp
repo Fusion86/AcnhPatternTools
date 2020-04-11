@@ -86,11 +86,12 @@ void MyFrame::onSaveFile(wxCommandEvent& event) {
 
     if (dirDialog.ShowModal() == wxID_OK) {
         wxMessageDialog encryptDialog(this, "Do you want to encrypt the savedata?",
-                                      "Encrypt savedata?", wxYES_NO);
+                                      "Encrypt savedata?", wxYES_NO | wxCANCEL);
         encryptDialog.SetYesNoLabels("Encrypt", "Don't encrypt");
 
-        // FIX THIS
-        bool encrypt = encryptDialog.ShowModal() == wxYES;
+        int res = encryptDialog.ShowModal();
+        if (res == wxID_CANCEL) return;
+        bool encrypt = res == wxID_YES;
 
         std::string path(dirDialog.GetPath().ToStdString());
         AppState->savedata->save(path, encrypt);
