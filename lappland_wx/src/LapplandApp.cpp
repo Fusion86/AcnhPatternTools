@@ -82,7 +82,7 @@ void MyFrame::onSaveFile(wxCommandEvent& event) {
     }
 
     wxDirDialog dirDialog(this, "Select directory where to save the savedata", "",
-                          wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+                          wxDD_DEFAULT_STYLE);
 
     if (dirDialog.ShowModal() == wxID_OK) {
         wxMessageDialog encryptDialog(this, "Do you want to encrypt the savedata?",
