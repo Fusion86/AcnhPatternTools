@@ -1,5 +1,6 @@
 #include "HorizonSaveData.hpp"
 
+#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -9,6 +10,7 @@
 
 #include "crypto/HorizonCrypto.hpp"
 #include "crypto/MurmurHash3.h"
+#include "crypto/SeadRand.hpp"
 
 int HorizonSaveData::load(const std::string& saveDir) {
     std::string headerPath = saveDir + "/mainHeader.dat";
@@ -50,18 +52,19 @@ int HorizonSaveData::load(const std::string& saveDir) {
 
     aesCryptCtr((uint8_t*)&main, key, iv, sizeof(main), (uint8_t*)&main);
 
+    isLoaded = true;
     return 0;
 }
 
 int HorizonSaveData::save(const std::string& saveDir, bool encrypt) {
-    auto writeData = [&saveDir](char* data) {
-        std::ofstream of(saveDir + "/main.dat");
+    auto writeData = [](std::string outFile, char* data, size_t size) {
+        std::ofstream of(outFile);
         if (not of.good()) {
             std::cout << "Couldn't open output file!" << std::endl;
             return 1;
         }
 
-        of.write(data, sizeof(main));
+        of.write(data, size);
         of.close();
         return 0;
     };
@@ -69,6 +72,13 @@ int HorizonSaveData::save(const std::string& saveDir, bool encrypt) {
     updateChecksums();
 
     if (encrypt) {
+        // Generate 128 random uints which will be used for params
+        auto rng = SeadRand(std::time(0));
+        for (size_t i = 0; i < mainHeader.crypto.size(); i++) {
+            mainHeader.crypto[i] = rng.getU32();
+        }
+        writeData(saveDir + "/mainHeader.dat", (char*)&mainHeader, sizeof(mainHeader));
+
         // Get key and IV from mainHeader
         std::array<uint8_t, 0x10> key = getKeyOrIV(mainHeader.crypto.data(), 0);
         std::array<uint8_t, 0x10> iv = getKeyOrIV(mainHeader.crypto.data(), 2);
@@ -76,12 +86,16 @@ int HorizonSaveData::save(const std::string& saveDir, bool encrypt) {
         // We don't want to encrypt in place so we create a new buffer
         auto data = std::make_unique<uint8_t[]>(sizeof(main));
         aesCryptCtr((uint8_t*)&main, key, iv, sizeof(main), data.get());
-        writeData((char*)data.get());
+        writeData(saveDir + "/main.dat", (char*)data.get(), sizeof(main));
     } else {
-        writeData((char*)&main);
+        writeData(saveDir + "/main.dat", (char*)&main, sizeof(main));
     }
 
     return 0;
+}
+
+bool HorizonSaveData::loaded() {
+    return isLoaded;
 }
 
 void HorizonSaveData::updateChecksums() {

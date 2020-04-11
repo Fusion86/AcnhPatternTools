@@ -9,7 +9,7 @@
 #include "AcnhTypes.hpp"
 #include "HorizonSaveData.hpp"
 
-static const std::string dir = "/home/woutervisser/Desktop/Animal Crossing New Horizons/11/";
+static const std::string dir = "/home/woutervisser/Desktop/Animal Crossing New Horizons/16/";
 
 TEST_CASE("Acnh types size") {
     REQUIRE(sizeof(AcnhHeader) == 292);

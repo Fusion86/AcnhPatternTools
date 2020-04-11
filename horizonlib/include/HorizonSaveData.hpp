@@ -18,6 +18,11 @@ class HorizonSaveData {
     /// Saves main.dat and mainHeaer.dat
     int save(const std::string& saveDir, bool encrypt = true);
 
+    /// Returns true when savedata has been loaded;
+    bool loaded();
+
   private:
+    bool isLoaded;
+
     void updateChecksums();
 };

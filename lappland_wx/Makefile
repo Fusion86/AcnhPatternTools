@@ -14,7 +14,7 @@ HPPFILES	:= $(foreach dir,$(INCLUDES),$(wildcard $(dir)/*.hpp))
 INCLUDE		:= $(foreach dir,$(INCLUDES),-I$(dir))
 
 # Shitty workaround
-_CPPFILES	:= $(foreach file,$(CPPFILES),$(realpath $(file) --relative-to=$(OBJDIR)))
+_CPPFILES	:= $(foreach file,$(CPPFILES),$(realpath $(file)))
 OFILES		:= $(addprefix $(OBJDIR)/,$(_CPPFILES:.cpp=.o))
 WARNINGS	:= -Wall -Wextra -Wno-unused-private-field
 CXXFLAGS	+= $(INCLUDE) $(WARNINGS)
@@ -23,6 +23,8 @@ ifeq ($(CXX),g++)
 # -lstdc++fs is needed because of Ubuntu
 LIBS		+= -lstdc++fs
 else ifeq ($(CXX),$(filter $(CXX),clang c++))
+# -fno-stack-check is needed because of https://forums.developer.apple.com/thread/121887#382262
+CXXFLAGS	+= -fno-stack-check
 else
 $(warning Unknown compiler '$(CXX)', this might be a problem.)
 endif
