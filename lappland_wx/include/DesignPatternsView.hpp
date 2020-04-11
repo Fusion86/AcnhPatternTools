@@ -7,6 +7,7 @@
 #include <fmt/format.h>
 
 #include "AppData.hpp"
+#include "ColorRectButton.hpp"
 #include "Events.hpp"
 #include "Identifiers.hpp"
 
@@ -26,8 +27,11 @@ class IDesignPatternProxy {
     virtual std::string getIslandId() const = 0;
     virtual std::unique_ptr<uint8_t[]> getRgbData() const = 0;
     virtual std::unique_ptr<uint8_t[]> getAlphaData() const = 0;
+    virtual std::array<AcnhColor, 15> getPalette() const = 0;
 };
 
+// TODO: We could probably move this to `AcnhDesignPattern` if we find a way to create an interface
+// WITHOUT virtual functions (no vtable). This is needed because the struct size mustn't change.
 template <class T>
 class DesignPatternProxyImpl : public IDesignPatternProxy {
   private:
@@ -83,6 +87,10 @@ class DesignPatternProxyImpl : public IDesignPatternProxy {
     std::unique_ptr<uint8_t[]> getAlphaData() const {
         return src.getAlphaData();
     }
+
+    std::array<AcnhColor, 15> getPalette() const {
+        return src.palette;
+    }
 };
 
 typedef DesignPatternProxyImpl<DesignPattern> DesignPatternProxy;
@@ -103,6 +111,7 @@ class DesignPatternsView : public wxPanel {
     wxTextCtrl* txtPatternIslandId;
 
     wxGenericStaticBitmap* bmpPatternCtrl;
+    ColorRectButton* paletteButtons[16];
 
     IDesignPatternProxy* selectedDesignPattern = nullptr;
 
@@ -125,4 +134,5 @@ class DesignPatternsView : public wxPanel {
     DECLARE_WIDGET_ID(txtPatternIsland, 5);
     DECLARE_WIDGET_ID(txtPatternIslandId, 6);
     DECLARE_WIDGET_ID(btnImportPattern, 7);
+    DECLARE_WIDGET_ID(btnPreviewMultiTile, 8);
 };

@@ -1,5 +1,7 @@
 #include "DesignPatternsView.hpp"
 
+#include <wx/wrapsizer.h>
+
 IDesignPatternProxy::~IDesignPatternProxy() {}
 
 DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
@@ -27,20 +29,12 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     // Column 1 - Info panel with name, creator, etc
     //
 
-    wxButton* paletteButtons[16];
-    wxBoxSizer* vboxPalette = new wxBoxSizer(wxHORIZONTAL);
-
-    // temp
-    wxImage img(40, 40);
-    img.SetRGB(wxRect(0, 0, 40, 40), 0xFF, 0, 0);
-    wxBitmap bmp(img);
+    wxWrapSizer* hboxPalette = new wxWrapSizer(wxHORIZONTAL);
 
     for (int i = 0; i < 16; i++) {
-        // TODO: This works, but there is a large (platform dependant) padding around the color. We
-        // probably want to create our own control here.
-        paletteButtons[i] = new wxButton(this, wxID_ANY, "", wxDefaultPosition, wxSize(40, 40));
-        paletteButtons[i]->SetBitmapLabel(bmp);
-        vboxPalette->Add(paletteButtons[i]);
+        paletteButtons[i] =
+            new ColorRectButton(this, wxID_ANY, wxColour(), wxDefaultPosition, wxSize(40, 40));
+        hboxPalette->Add(paletteButtons[i]);
     }
 
     wxStaticText* lblName = new wxStaticText(this, wxID_ANY, "Name");
@@ -68,7 +62,7 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     col1->Add(lblIslandId, 0, wxALIGN_CENTER_VERTICAL);
     col1->Add(txtPatternIslandId, 1, wxEXPAND);
     col1->Add(lblPalette, 0, wxALIGN_CENTER_VERTICAL);
-    col1->Add(vboxPalette, 1, wxEXPAND);
+    col1->Add(hboxPalette, 1, wxEXPAND);
 
     col1->AddGrowableCol(1);
 
@@ -81,11 +75,15 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     bmpPatternCtrl = new wxGenericStaticBitmap(this, wxID_ANY, bmpPattern);
 
     wxButton* btnImportPattern = new wxButton(this, ID_btnImportPattern, "Import image");
+    wxButton* btnPreviewMultiTile =
+        new wxButton(this, ID_btnPreviewMultiTile, "View multi-tile image");
 
     wxBoxSizer* col2 = new wxBoxSizer(wxVERTICAL);
     col2->Add(bmpPatternCtrl);
     col2->AddSpacer(5);
     col2->Add(btnImportPattern, 0, wxEXPAND);
+    col2->AddSpacer(5);
+    col2->Add(btnPreviewMultiTile, 0, wxEXPAND);
 
     //
     // Connect all the things
@@ -266,6 +264,11 @@ void DesignPatternsView::setSelectedPattern(IDesignPatternProxy* pattern) {
     txtPatternCreatorId->ChangeValue(pattern->getCreatorId());
     txtPatternIsland->ChangeValue(pattern->getIslandName());
     txtPatternIslandId->ChangeValue(pattern->getIslandId());
+
+    const auto& palette = pattern->getPalette();
+    for (size_t i = 0; i < palette.size(); i++) {
+        paletteButtons[i]->setColor(palette[i]);
+    }
 
     if (pattern->isProPattern()) {
         lstDesignPatterns->DeselectAll();
