@@ -153,7 +153,10 @@ void DesignPatternsView::onPatternNameChanged(wxCommandEvent& event) {
 }
 
 void DesignPatternsView::onImportImage(wxCommandEvent& event) {
-    if (selectedDesignPattern != nullptr) {
+    if (selectedDesignPattern == nullptr) {
+        wxMessageBox("Please select a design pattern to be used as the destination.",
+                     "No design pattern selected.");
+    } else {
         if (selectedDesignPattern->isProPattern()) {
             wxMessageBox("The image import functionality currently only works for normal patterns.",
                          "Not supported");
@@ -244,9 +247,6 @@ void DesignPatternsView::onImportImage(wxCommandEvent& event) {
 
             // TODO: Update pattern name
         }
-    } else {
-        wxMessageBox("Please select a design pattern to be used as the destination.",
-                     "No design pattern selected.");
     }
 }
 
