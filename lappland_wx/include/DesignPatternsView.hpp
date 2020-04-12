@@ -86,7 +86,7 @@ class DesignPatternProxyImpl : public IDesignPatternProxy {
     }
 
     std::unique_ptr<uint8_t[]> getRgbaData() const {
-        return src.getRgbData();
+        return src.getRgbaData();
     }
 
     std::unique_ptr<uint8_t[]> getAlphaData() const {
