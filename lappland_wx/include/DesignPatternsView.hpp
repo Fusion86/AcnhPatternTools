@@ -26,6 +26,7 @@ class IDesignPatternProxy {
     virtual std::string getIslandName() const = 0;
     virtual std::string getIslandId() const = 0;
     virtual std::unique_ptr<uint8_t[]> getRgbData() const = 0;
+    virtual std::unique_ptr<uint8_t[]> getRgbaData() const = 0;
     virtual std::unique_ptr<uint8_t[]> getAlphaData() const = 0;
     virtual std::array<AcnhColor, 15> getPalette() const = 0;
 };
@@ -84,6 +85,10 @@ class DesignPatternProxyImpl : public IDesignPatternProxy {
         return src.getRgbData();
     }
 
+    std::unique_ptr<uint8_t[]> getRgbaData() const {
+        return src.getRgbData();
+    }
+
     std::unique_ptr<uint8_t[]> getAlphaData() const {
         return src.getAlphaData();
     }
@@ -122,6 +127,7 @@ class DesignPatternsView : public wxPanel {
     void onSelectionChanged(wxCommandEvent& event);
     void onPatternNameChanged(wxCommandEvent& event);
     void onImportImage(wxCommandEvent& event);
+    void onPreviewMultiTileImage(wxCommandEvent& event);
 
     void setSelectedPattern(IDesignPatternProxy* pattern);
 
