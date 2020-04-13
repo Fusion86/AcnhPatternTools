@@ -2,6 +2,8 @@
 
 #include <wx/wrapsizer.h>
 
+#include "ImageViewFrame.hpp"
+
 IDesignPatternProxy::~IDesignPatternProxy() {}
 
 DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
@@ -287,10 +289,10 @@ void DesignPatternsView::onPreviewMultiTileImage(wxCommandEvent& event) {
         }
     }
 
-    dc.SelectObject(wxNullBitmap);
-
-    // TODO: Show new window with image + menu to save said image.
-    canvas.SaveFile("test.png", wxBITMAP_TYPE_PNG);
+    ImageViewFrame* frame = new ImageViewFrame(this, "Pattern 1 (4x4) - Multi-Tile Pattern Viewer",
+                                               wxDefaultPosition, wxSize(512, 512));
+    frame->SetBitmap(canvas);
+    frame->Show();
 }
 
 void DesignPatternsView::setSelectedPattern(IDesignPatternProxy* pattern) {
