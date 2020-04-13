@@ -1,5 +1,7 @@
 #include "ImageViewFrame.hpp"
 
+#include <fmt/format.h>
+
 ImageViewFrame::ImageViewFrame(wxWindow* parent, const wxString& title, const wxPoint& pos,
                                const wxSize& size)
     : wxFrame(parent, wxID_ANY, title, pos, size) {
@@ -13,11 +15,7 @@ ImageViewFrame::ImageViewFrame(wxWindow* parent, const wxString& title, const wx
     Bind(wxEVT_PAINT, &ImageViewFrame::onPaint, this);
 
     SetMenuBar(menuBar);
-    // CreateStatusBar();
-    // SetStatusText("Lappland vX.X.X.X"); // TODO: Maybe show what tiles are shown?
-
-    // TODO: Scale bitmap when user resizes window
-    // Maybe something like this https://forums.wxwidgets.org/viewtopic.php?t=8810
+    CreateStatusBar();
 }
 
 void ImageViewFrame::SetBitmap(const wxBitmap& bmp) {
@@ -39,13 +37,26 @@ void ImageViewFrame::onPaint(wxPaintEvent& event) {
 }
 
 void ImageViewFrame::render(wxPaintDC& dc) {
-    const wxSize size = GetSize();
+    const wxSize size = GetClientSize();
     int x_scale = size.GetWidth() / bitmap.GetWidth();
     int y_scale = size.GetHeight() / bitmap.GetHeight();
     int scale = std::min(x_scale, y_scale);
 
+    SetStatusText(fmt::format("Scale: {}", scale));
+
+    wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
+    gc->SetAntialiasMode(wxANTIALIAS_NONE);
+    gc->SetInterpolationQuality(wxINTERPOLATION_NONE);
+    gc->Scale(scale, scale);
+
     if (scale > 0) {
-        dc.SetUserScale(scale, scale);
-        dc.DrawBitmap(bitmap, 0, 0, true);
+        // Center image
+        int x = (size.GetWidth() / scale - bitmap.GetWidth()) / 2;
+        int y = (size.GetHeight() / scale - bitmap.GetHeight()) / 2;
+
+        // Draw image
+        dc.DrawBitmap(bitmap, x, y, true);
     }
+
+    delete gc;
 }
