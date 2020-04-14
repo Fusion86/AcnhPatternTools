@@ -224,8 +224,8 @@ void DesignPatternsView::onImportImage(wxCommandEvent& event) {
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 32; x++) {
                     AcnhColor color{img.GetRed(x_off + x, y_off + y),
-                                    img.GetBlue(x_off + x, y_off + y),
-                                    img.GetGreen(x_off + x, y_off + y)};
+                                    img.GetGreen(x_off + x, y_off + y),
+                                    img.GetBlue(x_off + x, y_off + y)};
 
                     int idx = 0xF; // Transparent by default
                     if (not img.HasAlpha() || img.GetAlpha(x_off + x, y_off + y) != 0) {

@@ -1,5 +1,7 @@
 #include "ImageViewFrame.hpp"
 
+#include <wx/graphics.h>
+
 #include <fmt/format.h>
 
 ImageViewFrame::ImageViewFrame(wxWindow* parent, const wxString& title, const wxPoint& pos,
