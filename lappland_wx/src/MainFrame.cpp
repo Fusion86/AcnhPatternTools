@@ -35,6 +35,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     Bind(wxEVT_MENU, &MainFrame::onAbout, this, wxID_ABOUT);
 
     SetSizer(container);
+    SetMinClientSize(wxSize(800, 600));
+
     SetMenuBar(menuBar);
     CreateStatusBar();
     SetStatusText("Lappland vX.X.X.X");

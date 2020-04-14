@@ -9,7 +9,7 @@ bool LapplandApp::OnInit() {
 
     // Create and show main window
     wxFrame* frame =
-        new MainFrame("No savedata loaded - Lappland", wxDefaultPosition, wxSize(700, 500));
+        new MainFrame("No savedata loaded - Lappland", wxDefaultPosition, wxSize(800, 600));
     frame->Show(true);
     return true;
 }

@@ -69,7 +69,7 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     col1->AddGrowableCol(1);
 
     //
-    // Column 2- Pattern preview image
+    // Column 2 - Pattern preview image
     //
 
     wxBitmap bmpPattern = wxBitmap();
@@ -102,7 +102,7 @@ DesignPatternsView::DesignPatternsView(wxWindow* parent) : wxPanel(parent, wxID_
     Bind(wxEVT_BUTTON, &DesignPatternsView::onImportImage, this, ID_btnImportPattern);
     Bind(wxEVT_BUTTON, &DesignPatternsView::onPreviewMultiTileImage, this, ID_btnPreviewMultiTile);
 
-    SetSizer(hbox);
+    SetSizerAndFit(hbox);
 }
 
 void DesignPatternsView::onDataChanged(wxCommandEvent& event) {
