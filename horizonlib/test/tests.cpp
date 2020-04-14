@@ -9,7 +9,7 @@
 #include "AcnhTypes.hpp"
 #include "HorizonSaveData.hpp"
 
-static const std::string dir = "/home/woutervisser/Desktop/Animal Crossing New Horizons/16/";
+static const std::string dir = "/home/woutervisser/Desktop/Animal Crossing New Horizons/21/";
 
 TEST_CASE("Acnh types size") {
     REQUIRE(sizeof(AcnhHeader) == 292);
@@ -19,13 +19,17 @@ TEST_CASE("Acnh types size") {
     REQUIRE(sizeof(AcnhPatternType) == 1);
     REQUIRE(sizeof(DesignPattern) == 680);
     REQUIRE(sizeof(ProDesignPattern) == 2216);
+    REQUIRE(sizeof(EncryptedInt32) == 8);
+    REQUIRE(sizeof(PersonalPhoto) == 143376);
     REQUIRE(sizeof(AcnhMainData) == 11283104);
+    REQUIRE(sizeof(AcnhPersonalData) == 442064);
 }
 
 TEST_CASE("Load encrypted savedata") {
     std::unique_ptr<HorizonSaveData> saveData = std::make_unique<HorizonSaveData>();
     REQUIRE(saveData->load(dir) == 0);
-    std::cout << "Hello " << saveData->main.character << " from " << saveData->main.island << std::endl;
+    std::cout << "Hello " << saveData->main.character << " from " << saveData->main.island
+              << std::endl;
 }
 
 TEST_CASE("Print patterns") {
@@ -73,4 +77,12 @@ TEST_CASE("DesignPattern setPixel(x,y)") {
     for (int i = 0; i < pattern.getResolution() * pattern.getResolution(); i++) {
         pattern.setPixel(i, i % 2 == 0 ? 0xA : 0xB);
     }
+}
+
+TEST_CASE("Print encrypted ints") {
+    std::unique_ptr<HorizonSaveData> saveData = std::make_unique<HorizonSaveData>();
+    REQUIRE(saveData->load(dir) == 0);
+
+    std::cout << "Nook miles: " << saveData->villagers[0].personal.nookMiles.get() << std::endl;
+    std::cout << "Bank: " << saveData->villagers[0].personal.bank.get() << std::endl;
 }

@@ -1,13 +1,4 @@
-typedef struct (int size) {
-    int uid;
-    byte str[size];
-} uid_str;
-
-typedef struct {
-    byte a;
-    byte b;
-    byte c;
-} color;
+#include "common.bt"
 
 enum <byte> PATTERN_TYPE {
     normal = 0x0,
@@ -79,7 +70,8 @@ struct {
     byte unk6[12];
 
     FSeek(0x1D7310);
-    design_pattern patterns[100] <optimize=false>;
+    design_pattern patterns[50] <optimize=false>;
+    design_pattern proPatterns[50] <optimize=false>;
     design_pattern town_flag;
     design_pattern able_sisters[8] <optimize=false>;
 } main_content <open=true>;

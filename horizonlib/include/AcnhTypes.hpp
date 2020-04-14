@@ -43,6 +43,11 @@ struct AcnhHeader {
   public:
     AcnhHeaderVersion version;
     std::array<uint8_t, 276> unk;
+
+    bool isEncrypted() const {
+        // HACK: Shitty way to check if data is encrypted
+        return !version.isSupported();
+    }
 };
 
 template <size_t STRLEN>
@@ -249,6 +254,55 @@ struct AcnhDesignPattern {
 typedef AcnhDesignPattern<512> DesignPattern;
 typedef AcnhDesignPattern<2048> ProDesignPattern;
 
+// Should this be named EncryptedUInt32?
+struct EncryptedInt32 {
+  private:
+    static constexpr uint32_t ENCRYPTION_CONSTANT = 0x80E32B11;
+    static constexpr uint8_t SHIFT_BASE = 3;
+
+  public:
+    uint32_t encryptedValue;
+    uint16_t adjust;
+    uint8_t shift;
+    uint8_t checksum;
+
+    uint32_t get() const {
+        // Untested
+        if (encryptedValue == 0 && adjust == 0 && shift == 0 && checksum == 0) {
+            return 0;
+        }
+
+        if (!valid()) {
+            std::cout << "EncryptedInt32 value is not valid, can't read!" << std::endl;
+            return 0;
+        }
+
+        // Magic
+        uint64_t a = ((uint64_t)encryptedValue) << ((32 - SHIFT_BASE - shift) & 0x3F);
+        int32_t b = (int32_t)a + (int32_t)(a >> 32);
+        return (uint32_t)(ENCRYPTION_CONSTANT - adjust + b);
+    }
+
+    void set() {}
+
+    bool valid() const {
+        return checksum == calculateChecksum();
+    }
+
+    uint8_t calculateChecksum() const {
+        const uint8_t* ptr = (uint8_t*)&encryptedValue;
+        return ptr[0] + ptr[1] + ptr[2] + ptr[3] - 0x2D;
+    }
+};
+
+struct PersonalPhoto {
+  public:
+    uint32_t size;
+
+    /// JPG data. Not all bytes might be used, see `size` for the actual count of used bytes.
+    std::array<uint8_t, 0x2300C> data;
+};
+
 struct AcnhMainData {
   public:
     AcnhHeader header;
@@ -261,6 +315,25 @@ struct AcnhMainData {
     DesignPattern townFlag;
     std::array<ProDesignPattern, 8> ableSisters;
     std::array<uint8_t, 0x8C3A08> unk3;
+};
+
+struct AcnhPersonalData {
+  public:
+    AcnhHeader header;
+    std::array<uint8_t, 44948> unk1;
+    AcnhUniqueIdentifier<10> island;
+    uint32_t unk2;
+    AcnhUniqueIdentifier<10> character;
+
+    std::array<uint8_t, 25756> unk3;
+    EncryptedInt32 nookMiles;
+    std::array<uint8_t, 48> unk4;
+    PersonalPhoto photo;
+
+    std::array<uint8_t, 0x1660> unk5; // Again character + island? + unks
+    std::array<uint8_t, 0x33004> unk6; // Pockets, item storage and unks
+    EncryptedInt32 bank;
+    std::array<uint8_t, 12948> unk7;
 };
 
 /// Header as in ___Header.dat

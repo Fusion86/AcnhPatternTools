@@ -1,0 +1,40 @@
+#include "common.bt"
+
+typedef struct {
+    ushort itemId;
+    uint flags;
+    ushort useCount;
+} owned_item;
+ 
+struct {
+    byte header[292];
+    byte unk1[44948];
+    uid_str island(20);
+    byte unk2[4];
+    uid_str character(20);
+    
+    byte unk3[25756];
+    encrypted_int32 nookMiles;
+    byte unk4[48];
+    uint photoUsedBytes;
+    byte photo[0x2300C];
+
+    uid_str islandAgain(20);
+    byte unk2Again[4];
+    uid_str characterAgain(20);
+
+    byte unk5[5660];
+    byte unk6[16];
+    owned_item items2[20];
+    byte unk7[16];
+    owned_item items1[20];
+    byte unk8[16];
+
+    encrypted_int32 wallet;
+    uint unk9;
+    owned_item storage[5000];
+
+    byte unk10[168536];
+    encrypted_int32 bank;
+    byte unk11[12948];
+} personal_content <open=true>;

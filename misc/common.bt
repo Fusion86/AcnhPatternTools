@@ -1,0 +1,17 @@
+ typedef struct (int size) {
+    int uid;
+    byte str[size];
+} uid_str;
+
+typedef struct {
+    byte a;
+    byte b;
+    byte c;
+} color;
+
+typedef struct {
+    int value;
+    ushort adjust;
+    byte shift;
+    byte checksum;
+} encrypted_int32;

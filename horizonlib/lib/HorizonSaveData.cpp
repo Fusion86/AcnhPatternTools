@@ -1,56 +1,23 @@
 #include "HorizonSaveData.hpp"
 
 #include <ctime>
-#include <fstream>
 #include <iomanip>
-#include <iostream>
 #include <list>
 #include <memory>
 #include <string>
 
-#include "crypto/HorizonCrypto.hpp"
-#include "crypto/MurmurHash3.h"
-#include "crypto/SeadRand.hpp"
+#define CHECK_OK(x)                                                                                \
+    if (x != 0) return 1;
 
 int HorizonSaveData::load(const std::string& saveDir) {
-    std::string headerPath = saveDir + "/mainHeader.dat";
-    std::string dataPath = saveDir + "/main.dat";
+    CHECK_OK(load(saveDir + "/main", main, mainHeader));
 
-    // Read savedata
-    std::ifstream dataFs(dataPath, std::ios::binary);
-    if (not dataFs.good()) {
-        std::cout << "Couldn't load data!" << std::endl;
-        return 1;
+    // TODO: Don't hardcode villager count
+    for (int i = 0; i < 1; i++) {
+        VillagerData data;
+        CHECK_OK(load(saveDir + "/Villager0/personal", data.personal, data.personalHeader));
+        villagers.push_back(data);
     }
-
-    dataFs.read((char*)&main, sizeof(main));
-
-    // Decrypt data
-    // TODO: Check if data is actually encrypted (though usually it is)
-
-    // Read mainHeader
-    std::ifstream headerFs(headerPath, std::ios::binary);
-    if (not headerFs.good()) {
-        std::cout << "Couldn't load header!" << std::endl;
-        return 1;
-    }
-
-    headerFs.read((char*)&mainHeader, sizeof(mainHeader));
-    headerFs.close();
-
-    std::cout << "Header: " << headerPath << std::endl;
-    std::cout << "Version: " << mainHeader.version << std::endl;
-
-    if (not mainHeader.version.isSupported()) {
-        std::cout << "Unkown version!" << std::endl;
-        return 1;
-    }
-
-    // Get key and IV from mainHeader
-    std::array<uint8_t, 0x10> key = getKeyOrIV(mainHeader.crypto.data(), 0);
-    std::array<uint8_t, 0x10> iv = getKeyOrIV(mainHeader.crypto.data(), 2);
-
-    aesCryptCtr((uint8_t*)&main, key, iv, sizeof(main), (uint8_t*)&main);
 
     isLoaded = true;
     return 0;
