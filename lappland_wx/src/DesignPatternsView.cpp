@@ -123,7 +123,7 @@ void DesignPatternsView::onDataChanged(wxCommandEvent& event) {
     }
 
     lstDesignPatterns->Set(patternNames);
-    lstProDesignPatterns->Set(patternNames);
+    lstProDesignPatterns->Set(proPatternNames);
 }
 
 void DesignPatternsView::onSelectionChanged(wxCommandEvent& event) {
