@@ -7,6 +7,10 @@
 #include "DesignPatternsView.hpp"
 #include "GeneralInfoView.hpp"
 
+#define XSTR(s) STR(s)
+#define STR(s) #s
+#define VERSION_TEXT "Lappland " XSTR(APP_VERSION_STR)
+
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
     wxMenu* menuFile = new wxMenu();
@@ -39,7 +43,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
     SetMenuBar(menuBar);
     CreateStatusBar();
-    SetStatusText("Lappland vX.X.X.X");
+    SetStatusText(VERSION_TEXT);
 }
 
 void MainFrame::onOpenFile(wxCommandEvent& event) {

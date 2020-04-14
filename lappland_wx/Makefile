@@ -2,10 +2,21 @@ TARGET 		:= $(notdir $(CURDIR))
 SOURCES 	:= src ../horizonlib/lib
 INCLUDES 	:= include ../horizonlib/include
 
+APP_VERSION := $(shell git describe --tag --abbrev=0)
+APP_VERSION_HASH := $(shell git describe --always)
+
+ifeq ($(APP_VERSION),) # If APP_VERSIOJN is empty, aka no tags
+APP_VERSION_STR := $(APP_VERSION_HASH)
+else
+APP_VERSION_STR := $(APP_VERSION)-$(APP_VERSION_HASH)
+endif
+
+DEFINES := -DAPP_VERSION=$(APP_VERSION) -DAPP_VERSION_HASH=$(APP_VERSION_HASH) -DAPP_VERSION_STR=$(APP_VERSION_STR)
+
 TESTS		:= test
 BUILD 		:= build
 OBJDIR		:= obj
-CXXFLAGS	+= -std=c++17 -g -MD $(shell wx-config --cxxflags)
+CXXFLAGS	+= -std=c++17 -g -MD $(shell wx-config --cxxflags) $(DEFINES)
 LIBS		:= -lmbedcrypto $(shell wx-config --libs)
 
 CPPFILES 	:= $(foreach dir,$(SOURCES),$(shell find $(dir) -type f -iname "*.cpp"))
