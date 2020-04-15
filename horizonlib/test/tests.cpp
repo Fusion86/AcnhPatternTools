@@ -84,5 +84,6 @@ TEST_CASE("Print encrypted ints") {
     REQUIRE(saveData->load(dir) == 0);
 
     std::cout << "Nook miles: " << saveData->villagers[0].personal.nookMiles.get() << std::endl;
+    std::cout << "Wallet: " << saveData->villagers[0].personal.wallet.get() << std::endl;
     std::cout << "Bank: " << saveData->villagers[0].personal.bank.get() << std::endl;
 }

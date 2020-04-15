@@ -330,8 +330,9 @@ struct AcnhPersonalData {
     std::array<uint8_t, 48> unk4;
     PersonalPhoto photo;
 
-    std::array<uint8_t, 0x1660> unk5; // Again character + island? + unks
-    std::array<uint8_t, 0x33004> unk6; // Pockets, item storage and unks
+    std::array<uint8_t, 6080> unk5; // Again character + island? + unks
+    EncryptedInt32 wallet;
+    std::array<uint8_t, 208540> unk6; // Pockets, item storage and unks
     EncryptedInt32 bank;
     std::array<uint8_t, 12948> unk7;
 };
