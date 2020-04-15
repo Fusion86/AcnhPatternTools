@@ -28,9 +28,9 @@ typedef struct {
     int num1; // 08 for me, 09 for Thulinma
     byte zero1[8];
     char name[40];
-    uid_str island(20);
+    uid_str island(10);
     int unk3;
-    uid_str creator(20);
+    uid_str creator(10);
     byte zero2[4];
     byte unk1; // Type/datasize?
     byte unk2;
@@ -51,6 +51,42 @@ typedef struct {
     short zero3;
 } design_pattern;
 
+typedef struct {
+    ushort itemId;
+    uint flags;
+    ushort useCount;
+    byte unk[36];
+} furniture;
+
+typedef struct {
+    byte unk[76];
+} struct_unk1;
+
+typedef struct {
+    byte species; // 0x23 == uninitialized villager
+    byte variant;
+    byte variant;
+    byte unk1;
+
+    uid_str island(10);
+    byte unk5[4];
+    uid_str creator(10); // Player who first found/invited this character?
+    byte unk6[65500];
+    acnhstring catchphrase(12);
+    byte unk7[1472];
+    furniture furniture_[32];
+    struct_unk1 unk8[64];
+    byte unk9[3140];
+} villager;
+
+typedef struct {
+    ushort id;
+    ushort x;
+    ushort y;
+    ushort rot;
+    byte unk[12];
+} building;
+
 struct {
     int majorVer;
     int minorVer;
@@ -59,19 +95,19 @@ struct {
     ushort unk3;
     ushort saveFileRevision;
 
-    if (majorVer != 0x6D || minorVer != 0x78 || saveFileRevision != 2) {
+    if (majorVer != 0x6D || minorVer != 0x78 || saveFileRevision != 4) {
         Printf("Unkown version! This version might not be supported.\n");
     }
 
-    byte unk4[276];
-    uid_str island(20);
-    byte unk5[4];
-    uid_str character(20);
-    byte unk6[12];
+    byte unk4[272];
+    villager villagers[10] <optimize=false>;
 
     FSeek(0x1D7310);
-    design_pattern patterns[50] <optimize=false>;
-    design_pattern proPatterns[50] <optimize=false>;
-    design_pattern town_flag;
-    design_pattern able_sisters[8] <optimize=false>;
+    //design_pattern patterns[50] <optimize=false>;
+    //design_pattern proPatterns[50] <optimize=false>;
+    //design_pattern town_flag;
+    //design_pattern able_sisters[8] <optimize=false>;
+
+    FSeek(0x2D0F1C);
+    building buildings[46];
 } main_content <open=true>;

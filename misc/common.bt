@@ -1,6 +1,10 @@
- typedef struct (int size) {
+typedef struct (int strlen) {
+    byte data[strlen * 2];
+} acnhstring;
+
+typedef struct (int size) {
     int uid;
-    byte str[size];
+    acnhstring str(size);
 } uid_str;
 
 typedef struct {
