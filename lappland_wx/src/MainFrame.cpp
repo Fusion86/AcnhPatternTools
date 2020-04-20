@@ -6,6 +6,7 @@
 
 #include "DesignPatternsView.hpp"
 #include "GeneralInfoView.hpp"
+#include "TurnipPricesView.hpp"
 
 #define XSTR(s) STR(s)
 #define STR(s) #s
@@ -29,6 +30,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
     notebook->AddPage(new GeneralInfoView(notebook), "General");
     notebook->AddPage(new DesignPatternsView(notebook), "Design Patterns");
+    notebook->AddPage(new TurnipPricesView(notebook), "Turnip Prices");
 
     wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
     container->Add(notebook, 1, wxEXPAND | wxALL, 5);

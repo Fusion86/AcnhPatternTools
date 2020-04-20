@@ -303,6 +303,25 @@ struct PersonalPhoto {
     std::array<uint8_t, 0x2300C> data;
 };
 
+struct BuildingRecord {
+  public:
+    uint16_t id;
+    uint16_t x;
+    uint16_t y;
+    uint16_t rotation;
+    std::array<uint8_t, 12> unk;
+};
+
+typedef std::array<uint32_t, 2> TurnipPrice;
+
+typedef struct TurnipPrices {
+  public:
+    uint32_t buyPrice;
+
+    /// Sunday, Monday, Tuesday, ..., Saturday
+    std::array<TurnipPrice, 7> days;
+};
+
 struct AcnhMainData {
   public:
     AcnhHeader header;
@@ -314,7 +333,11 @@ struct AcnhMainData {
     std::array<ProDesignPattern, 50> proDesignPatterns;
     DesignPattern townFlag;
     std::array<ProDesignPattern, 8> ableSisters;
-    std::array<uint8_t, 0x8C3A08> unk3;
+    std::array<uint8_t, 0xD1E84> unk3;
+    std::array<BuildingRecord, 46> buildings;
+    std::array<uint8_t, 0x140DAC> unk4;
+    TurnipPrices turnipPrices;
+    std::array<uint8_t, 0x6B0A04> unk5;
 };
 
 struct AcnhPersonalData {

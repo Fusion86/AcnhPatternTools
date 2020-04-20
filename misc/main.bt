@@ -37,7 +37,7 @@ typedef struct {
     byte unk4[6];
     color palette[15];
 
-    if (unk1 == 0x02 || unk1 == 0x04 || unk1 == 0x06) {
+    if (unk1 == 0x00 || unk1 == 0x02 || unk1 == 0x04 || unk1 == 0x06) {
         ubyte data[512]; // normal pattern
     } else if (unk1 == 0x01 || unk1 == 0x05) {
         ubyte data[2048]; // pro pattern
@@ -87,6 +87,22 @@ typedef struct {
     byte unk[12];
 } building;
 
+typedef struct {
+    uint morningPrice;
+    uint eveningPrice;
+} turnip_price;
+
+typedef struct {
+    uint buyPrice;
+    turnip_price sunday;
+    turnip_price monday;
+    turnip_price tuesday;
+    turnip_price wednesday;
+    turnip_price thursday;
+    turnip_price friday;
+    turnip_price saturday;
+} turnip_prices;
+
 struct {
     int majorVer;
     int minorVer;
@@ -103,11 +119,14 @@ struct {
     villager villagers[10] <optimize=false>;
 
     FSeek(0x1D7310);
-    //design_pattern patterns[50] <optimize=false>;
-    //design_pattern proPatterns[50] <optimize=false>;
-    //design_pattern town_flag;
-    //design_pattern able_sisters[8] <optimize=false>;
+    design_pattern patterns[50] <optimize=false>;
+    design_pattern proPatterns[50] <optimize=false>;
+    design_pattern town_flag;
+    design_pattern able_sisters[8] <optimize=false>;
 
     FSeek(0x2D0F1C);
     building buildings[46];
+
+    FSeek(0x412060);
+    turnip_prices _turnip_prices;
 } main_content <open=true>;
