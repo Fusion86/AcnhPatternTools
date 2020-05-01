@@ -10,8 +10,8 @@
 #include "crypto/SeadRand.hpp"
 
 struct MurmurHashSection {
-    size_t offset;
-    size_t length;
+    int offset;
+    int length;
 };
 
 struct VillagerData {

@@ -1,5 +1,6 @@
 // For compilers that support precompilation, includes "wx/wx.h".
+#ifdef WX_PRECOMP
 #include <wx/wxprec.h>
-#ifndef WX_PRECOMP
+#else
 #include <wx/wx.h>
 #endif

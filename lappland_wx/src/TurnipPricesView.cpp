@@ -59,7 +59,7 @@ void TurnipPricesView::onCellChanged(wxGridEvent& event) {
         int day = event.GetRow();
         int val = std::stoi(grid->GetCellValue(day, part).ToStdString());
         AppState->savedata->main.turnipPrices.days[day][part] = val;
-    } catch (const std::exception& ex) {
+    } catch (const std::exception&) {
         return;
     }
 }

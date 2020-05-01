@@ -40,7 +40,7 @@ int HorizonSaveData::save(const std::string& saveDir, bool encrypt) {
 
     if (encrypt) {
         // Generate 128 random uints which will be used for params
-        auto rng = SeadRand(std::time(0));
+        auto rng = SeadRand((uint32_t)std::time(0));
         for (size_t i = 0; i < mainHeader.crypto.size(); i++) {
             mainHeader.crypto[i] = rng.getU32();
         }

@@ -25,7 +25,7 @@ struct AcnhHeaderVersion {
         constexpr std::array supportedMinor = {0x78};
         constexpr std::array supportedRev = {0x2, 0x4, 0x5};
 
-        if (std::find(supportedMajor.begin(), supportedMinor.end(), majorVer) ==
+        if (std::find(supportedMajor.begin(), supportedMajor.end(), majorVer) ==
             supportedMajor.end())
             return false;
         if (std::find(supportedMinor.begin(), supportedMinor.end(), minorVer) ==
@@ -314,7 +314,7 @@ struct BuildingRecord {
 
 typedef std::array<uint32_t, 2> TurnipPrice;
 
-typedef struct TurnipPrices {
+struct TurnipPrices {
   public:
     uint32_t buyPrice;
 

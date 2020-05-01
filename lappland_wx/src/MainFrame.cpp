@@ -27,7 +27,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
-    notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
+    wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    notebook = new wxNotebook(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP);
     notebook->AddPage(new GeneralInfoView(notebook), "General");
     notebook->AddPage(new DesignPatternsView(notebook), "Design Patterns");
     notebook->AddPage(new TurnipPricesView(notebook), "Turnip Prices");
@@ -40,7 +41,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     Bind(wxEVT_MENU, &MainFrame::onExit, this, wxID_EXIT);
     Bind(wxEVT_MENU, &MainFrame::onAbout, this, wxID_ABOUT);
 
-    SetSizer(container);
+    panel->SetSizer(container);
     SetMinClientSize(wxSize(800, 600));
 
     SetMenuBar(menuBar);
@@ -62,7 +63,7 @@ void MainFrame::onOpenFile(wxCommandEvent& event) {
             SetStatusText(fmt::format("Loaded savedata from {}", path));
 
             // Notify all tabs of the change
-            for (int i = 0; i < notebook->GetPageCount(); i++) {
+            for (size_t i = 0; i < notebook->GetPageCount(); i++) {
                 wxCommandEvent event(EVT_DATA_CHANGED);
                 wxPostEvent(notebook->GetPage(i), event);
             }
