@@ -70,7 +70,7 @@ struct AcnhString {
         // HACK:
         char cstr[STRLEN + 1];
         for (size_t i = 0; i < STRLEN; i++) {
-            cstr[i] = bytes[i];
+            cstr[i] = (char)bytes[i];
         }
         cstr[STRLEN] = 0; // Zero terminator
         return std::string(cstr);
