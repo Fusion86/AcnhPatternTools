@@ -21,18 +21,9 @@ struct AcnhHeaderVersion {
     }
 
     bool isSupported() const {
-        constexpr std::array supportedMajor = {0x6D};
-        constexpr std::array supportedMinor = {0x78};
-        constexpr std::array supportedRev = {0x2, 0x4, 0x5};
-
-        if (std::find(supportedMajor.begin(), supportedMajor.end(), majorVer) ==
-            supportedMajor.end())
-            return false;
-        if (std::find(supportedMinor.begin(), supportedMinor.end(), minorVer) ==
-            supportedMinor.end())
-            return false;
-        if (std::find(supportedRev.begin(), supportedRev.end(), saveFileRevision) ==
-            supportedRev.end())
+        constexpr std::array supportedRevs = {0x6};
+        if (std::find(supportedRevs.begin(), supportedRevs.end(), saveFileRevision) ==
+            supportedRevs.end())
             return false;
         return true;
     }
@@ -337,7 +328,7 @@ struct AcnhMainData {
     std::array<BuildingRecord, 46> buildings;
     std::array<uint8_t, 0x140DAC> unk4;
     TurnipPrices turnipPrices;
-    std::array<uint8_t, 0x6B0A04> unk5;
+    std::array<uint8_t, 0x6BCC34> unk5;
 };
 
 struct AcnhPersonalData {

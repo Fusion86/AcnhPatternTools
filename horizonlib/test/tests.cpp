@@ -24,7 +24,7 @@ TEST_CASE("Acnh types size") {
     REQUIRE(sizeof(BuildingRecord) == 20);
     REQUIRE(sizeof(TurnipPrice) == 8);
     REQUIRE(sizeof(TurnipPrices) == 60);
-    REQUIRE(sizeof(AcnhMainData) == 11283104);
+    REQUIRE(sizeof(AcnhMainData) == 11332816);
     REQUIRE(sizeof(AcnhPersonalData) == 442064);
 }
 

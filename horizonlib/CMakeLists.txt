@@ -12,3 +12,8 @@ if(MSVC)
 else()
     target_link_libraries(horizonlib PRIVATE mbedcrypto)
 endif()
+
+add_executable(horizonlib_test test/main.cpp test/tests.cpp)
+target_include_directories(horizonlib_test PRIVATE include)
+target_compile_features(horizonlib_test PRIVATE cxx_std_17)
+target_link_libraries(horizonlib_test PRIVATE horizonlib)
