@@ -11,4 +11,5 @@ enum {
     DECLARE_CLASS_BASE_ID(GeneralInfoView, 0),
     DECLARE_CLASS_BASE_ID(DesignPatternsView, 100),
     DECLARE_CLASS_BASE_ID(TurnipPricesView, 200),
+    DECLARE_CLASS_BASE_ID(MainFrame, 300),
 };

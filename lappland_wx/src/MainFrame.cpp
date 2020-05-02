@@ -8,9 +8,7 @@
 #include "GeneralInfoView.hpp"
 #include "TurnipPricesView.hpp"
 
-#define XSTR(s) STR(s)
-#define STR(s) #s
-#define VERSION_TEXT "Lappland " XSTR(APP_VERSION_STR)
+#define VERSION_TEXT "Lappland " lappland_wx_VERSION_STR
 
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size) {
@@ -20,11 +18,15 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT);
 
+    wxMenu* menuTools = new wxMenu();
+    menuTools->Append(ID_menuSaveCrypto, "Encrypt/Decrypt savedata");
+
     wxMenu* menuHelp = new wxMenu();
     menuHelp->Append(wxID_ABOUT);
 
     wxMenuBar* menuBar = new wxMenuBar();
     menuBar->Append(menuFile, "&File");
+    menuBar->Append(menuTools, "&Tools");
     menuBar->Append(menuHelp, "&Help");
 
     wxPanel* panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);

@@ -4,6 +4,7 @@
 #include <wx/notebook.h>
 
 #include "AppData.hpp"
+#include "Identifiers.hpp"
 
 class MainFrame : public wxFrame {
   public:
@@ -16,4 +17,7 @@ class MainFrame : public wxFrame {
     void onSaveFile(wxCommandEvent& event);
     void onExit(wxCommandEvent& event);
     void onAbout(wxCommandEvent& event);
+
+    DECLARE_BASE_ID(MainFrame);
+    DECLARE_WIDGET_ID(menuSaveCrypto, 0);
 };
