@@ -7,10 +7,16 @@ Animal Crossing: New Horizons save/pattern editor.
 - mbedtls
 - wxWidgets (tested on 3.1.3)
 
-### Ubuntu
+### Debian/Ubuntu/etc
 
 ```sh
-sudo apt install mbedtls
+sudo apt install libmbedtls-dev
+
+# Install wxWidgets with GTK (default)
+https://wiki.wxwidgets.org/Compiling_and_getting_started
+
+# Or install wxWidget with QT
+https://docs.wxwidgets.org/3.1.3/plat_qt_install.html
 ```
 
 ### Windows and macOS
@@ -37,7 +43,8 @@ mkdir build
 cd build
 cmake ..
 
-# Now use gcc/msvc/whatever to build
+# Now use make/msvc/whatever to build
+make
 ```
 
 ## Credits
